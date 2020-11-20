@@ -3,16 +3,17 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-// DI, Serilog, Settings
-
 namespace Net5.ConsoleAppBase {
     public class MainService {
         private readonly ILogger<MainService> _log;
         private readonly IConfiguration _config;
+        // private readonly YourDataContext _db;
 
+        //public MainService(ILogger<MainService> log, IConfiguration config, YourDataContext db) {
         public MainService(ILogger<MainService> log, IConfiguration config) {
             _log = log;
             _config = config;
+            //_db = db;
         }
 
         public void Run() {

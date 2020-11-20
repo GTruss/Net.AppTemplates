@@ -1,24 +1,22 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
-using Net5.Common;
-using Serilog;
-using System;
+﻿using System;
 using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Net5.Common;
 
-// Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings files)
+// Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
+
+// .bat file needed to set environment variables on the server
+// setx DOTNET_ENVIRONMENT Development /M
+// setx DOTNET_ENVIRONMENT Staging /M
+// setx DOTNET_ENVIRONMENT Production /M
 
 namespace Net5.ConsoleAppBase {
-    /// <summary>
-    /// .bat file needed to set environment variables on the server
-    /// setx DOTNET_ENVIRONMENT Development /M
-    /// setx DOTNET_ENVIRONMENT Staging /M
-    /// setx DOTNET_ENVIRONMENT Production /M
-    /// </summary>
     class Program {
         static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
         static readonly bool isDev = env == "Development";
-        static Serilog.ILogger _logger;
+        static ILogger _logger;
         static IConfiguration _config;
     
         static void Main(string[] args) {
