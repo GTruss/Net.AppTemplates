@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Net5.Common;
+using Microsoft.Extensions.Hosting;
 
 // Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
 
@@ -16,6 +17,7 @@ namespace Net5.ConsoleAppBase {
     class Program {
         static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
         static readonly bool isDev = env == "Development";
+        static IHost _host;
         static ILogger _logger;
         static IConfiguration _config;
     
@@ -46,10 +48,10 @@ namespace Net5.ConsoleAppBase {
                 }
 
                 // Setup DI
-                var host = DIContainerConfig.Configure(_config);
+                _host = DIContainerConfig.Configure(_config);
 
                 // Create a new local scope and run the Main service
-                using (var scope = host.Services.CreateScope()) {
+                using (var scope = _host.Services.CreateScope()) {
                     var svc = scope.ServiceProvider.GetRequiredService<MainService>();
                     svc.Run();
                 };
@@ -89,8 +91,9 @@ namespace Net5.ConsoleAppBase {
 
         static void CleanupExpiredLogs() {
             try {
-                string expireInterval = _config.GetValue<string>("Log:Expiration:Interval");
-                int expireCount = _config.GetValue<int>("Log:Expiration:Count");
+                LogArchive logSettings = new();
+                _config.Bind("LogArchive", logSettings);
+
                 string path = AppDomain.CurrentDomain.BaseDirectory;
                 path += @"\logs";
 
@@ -100,9 +103,9 @@ namespace Net5.ConsoleAppBase {
                     var file = new FileInfo(fileName);
                     DateTime threshold = DateTime.Now;
 
-                    threshold = expireInterval.ToLower() switch {
-                        "minutes" => DateTime.Now.AddMinutes(-expireCount),
-                        "days" => DateTime.Now.AddDays(-expireCount),
+                    threshold = logSettings.Expiration.Interval.ToLower() switch {
+                        "minutes" => DateTime.Now.AddMinutes(-logSettings.Expiration.IntervalCount),
+                        "days" => DateTime.Now.AddDays(-logSettings.Expiration.IntervalCount),
                         _ => throw new NotImplementedException()
                     };
 
@@ -110,11 +113,22 @@ namespace Net5.ConsoleAppBase {
                         file.Delete();
                     }
                 }
+
+
             }
             catch {
                 //The log file directory doesn't exist yet, ignore
                 return;
             }
+        }
+    }
+
+    public record LogArchive {
+         public ExpirationSettings Expiration { get; set; }
+
+        public record ExpirationSettings {
+            public string Interval { get; set; }
+            public int IntervalCount { get; set; }
         }
     }
 }
