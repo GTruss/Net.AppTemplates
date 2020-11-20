@@ -100,15 +100,11 @@ namespace Net5.ConsoleAppBase {
                     var file = new FileInfo(fileName);
                     DateTime threshold = DateTime.Now;
 
-                    switch (expireInterval.ToLower()) {
-                        case "minutes":
-                            threshold = DateTime.Now.AddMinutes(-expireCount);
-                            break;
-
-                        case "days":
-                            threshold = DateTime.Now.AddDays(-expireCount);
-                            break;
-                    }
+                    threshold = expireInterval.ToLower() switch {
+                        "minutes" => DateTime.Now.AddMinutes(-expireCount),
+                        "days" => DateTime.Now.AddDays(-expireCount),
+                        _ => throw new NotImplementedException()
+                    };
 
                     if (file.CreationTime < threshold) {
                         file.Delete();
