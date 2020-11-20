@@ -13,7 +13,7 @@ namespace Net5.ConsoleAppBase {
     /// .bat file needed to set environment variables on the server
     /// setx DOTNET_ENVIRONMENT Development /M
     /// setx DOTNET_ENVIRONMENT Staging /M
-    /// -- No reason to set "Production" because it's the fallback if the environment variable isn't set.
+    /// setx DOTNET_ENVIRONMENT Production /M
     /// </summary>
     class Program {
         static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
@@ -28,6 +28,7 @@ namespace Net5.ConsoleAppBase {
                 var builder = new ConfigurationBuilder();
                 _config = BuildConfig(builder);
 
+                // Auto-delete old log files. Configurable for each environment.
                 CleanupExpiredLogs();
 
                 // Setup Serilog
@@ -38,6 +39,11 @@ namespace Net5.ConsoleAppBase {
                 if (string.IsNullOrEmpty(env) ||
                     !env.Contains("Development") && !env.Contains("Staging") && !env.Contains("Production")) {
                     _logger.Error("Missing/Unexpected environment variable: DOTNET_ENVIRONMENT = {env} (expected 'Development', 'Staging' or 'Production').", env);
+                    // Microsoft's default is to "fallback" to Production if the DOTNET_ENVIRONMENT
+                    // doesn't exist. This is bad. If it's a manual deployment to the Development or Staging
+                    // environment and they forget to add the Environment Variable, it will run the Production
+                    // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes. Err on the side of caution.
+                    // So, require that the Environment Variable to be set AND it must be one of the three.
                     return;
                 }
 
