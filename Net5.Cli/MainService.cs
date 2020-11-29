@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Net5.ConsoleAppBase {
+namespace Net5.Cli {
     public class MainService {
         private readonly ILogger<MainService> _log;
         private readonly IConfiguration _config;

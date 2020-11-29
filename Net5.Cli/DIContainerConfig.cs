@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Net5.ConsoleAppBase {
-    public static class DIContainerConfig {
+namespace Net5.Cli {
+    internal static class DIContainerConfig {
         public static IHost Configure(IConfiguration config) {
             var host = Host.CreateDefaultBuilder()
                         .ConfigureServices((context, services) => {

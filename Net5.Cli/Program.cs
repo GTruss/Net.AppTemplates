@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 // setx DOTNET_ENVIRONMENT Staging /M
 // setx DOTNET_ENVIRONMENT Production /M
 
-namespace Net5.ConsoleAppBase {
+namespace Net5.Cli {
     class Program {
         static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
         static readonly bool isDev = env == "Development";
