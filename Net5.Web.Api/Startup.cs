@@ -19,8 +19,8 @@ namespace Net5.Web.Api {
         public Startup(IConfiguration configuration, IHostEnvironment env) {
 
             var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appSettings.json")
-                .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
             this.Configuration = builder.Build();
