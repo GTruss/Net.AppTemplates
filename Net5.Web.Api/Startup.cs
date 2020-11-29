@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,8 @@ namespace Net5.Web.Api {
 
             this.Configuration = builder.Build();
             Configuration = configuration;
+
+            CleanupExpiredLogs();
 
         }
 
@@ -56,6 +59,46 @@ namespace Net5.Web.Api {
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
+        }
+
+        private void CleanupExpiredLogs() {
+            try {
+                LogArchive logSettings = new();
+                Configuration.Bind("LogArchive", logSettings);
+
+                string path = AppDomain.CurrentDomain.BaseDirectory;
+                path += @"\logs";
+
+                var files = Directory.GetFiles(path);
+
+                foreach (var fileName in files) {
+                    var file = new FileInfo(fileName);
+                    DateTime threshold = DateTime.Now;
+
+                    threshold = logSettings.Expiration.Interval.ToLower() switch {
+                        "minutes" => DateTime.Now.AddMinutes(-logSettings.Expiration.IntervalCount),
+                        "days" => DateTime.Now.AddDays(-logSettings.Expiration.IntervalCount),
+                        _ => throw new NotImplementedException()
+                    };
+
+                    if (file.CreationTime < threshold) {
+                        file.Delete();
+                    }
+                }
+            }
+            catch {
+                //The log file directory doesn't exist yet, ignore
+                return;
+            }
+        }
+    }
+
+    public record LogArchive {
+        public ExpirationSettings Expiration { get; set; }
+
+        public record ExpirationSettings {
+            public string Interval { get; set; }
+            public int IntervalCount { get; set; }
         }
     }
 }

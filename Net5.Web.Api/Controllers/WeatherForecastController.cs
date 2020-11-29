@@ -23,6 +23,7 @@ namespace Net5.Web.Api.Controllers {
         [HttpGet]
         public IEnumerable<WeatherForecast> Get() {
             var rng = new Random();
+            _logger.LogInformation("Get Forecast called {dbl}", rng.NextDouble());
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),

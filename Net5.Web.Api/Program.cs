@@ -14,8 +14,9 @@ namespace Net5.Web.Api {
     public class Program {
         public static int Main(string[] args) {
 
+            // Setup logging here to log web host startup and host exceptions.
+            // Alternatively, can be defined in appsettings but probably isn't needed.
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
-
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -46,6 +47,7 @@ namespace Net5.Web.Api {
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseStartup<Startup>();
-                });
+                }
+            );
     }
 }
