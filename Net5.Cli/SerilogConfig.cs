@@ -8,7 +8,7 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Json;
 
-namespace Net5.Common {
+namespace Net5.Cli {
     public static class SerilogConfig {
         public static void Configure(IConfiguration config) {
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
@@ -19,8 +19,6 @@ namespace Net5.Common {
                             .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:u} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(new JsonFormatter(), logFileName + ".json")
                             .CreateLogger();
-
-            
         }
     }
 }
