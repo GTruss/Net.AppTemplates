@@ -16,6 +16,8 @@ using Serilog;
 
 namespace Net5.Web.Api {
     public class Startup {
+        private ILogger<Startup> _logger;
+
         public Startup(IConfiguration configuration, IHostEnvironment env) {
 
             var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
@@ -25,7 +27,6 @@ namespace Net5.Web.Api {
 
             this.Configuration = builder.Build();
             Configuration = configuration;
-
             CleanupExpiredLogs();
 
         }
@@ -42,7 +43,24 @@ namespace Net5.Web.Api {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger) {
+            _logger = logger;
+            string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (string.IsNullOrEmpty(envstr) ||
+                !envstr.ToLower().Contains("development") &&
+                !envstr.ToLower().Contains("staging") &&
+                !envstr.ToLower().Contains("production")) {
+                _logger.LogError("Missing/Unexpected environment variable: ASPNETCORE_ENVIRONMENT = {env} (expected 'Development', 'Staging' or 'Production').", envstr);
+                // Microsoft's default is to "fallback" to Production if the ASPNETCORE_ENVIRONMENT environment
+                // variable doesn't exist. This is bad. If it's a manual deployment to a new Development or Staging
+                // environment and they forget to add the Environment Variable, it will run the Production
+                // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes. Err on the side of caution.
+                // So, require that the Environment Variable to be set AND it must be one of the three.               
+                return;
+            }
+
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

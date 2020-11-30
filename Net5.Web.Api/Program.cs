@@ -24,7 +24,7 @@ namespace Net5.Web.Api {
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.FromLogContext().Enrich.WithMachineName()
                 .WriteTo.Console()
-                .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:u} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(new JsonFormatter(), logFileName + ".json")
                 .CreateLogger();
 

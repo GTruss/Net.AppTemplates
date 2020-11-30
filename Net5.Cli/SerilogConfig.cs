@@ -16,7 +16,7 @@ namespace Net5.Cli {
                             .ReadFrom.Configuration(config)
                             .Enrich.FromLogContext().Enrich.WithMachineName()
                             .WriteTo.Console()
-                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:u} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(new JsonFormatter(), logFileName + ".json")
                             .CreateLogger();
         }

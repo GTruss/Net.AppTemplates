@@ -2,12 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>ef9ccb1c-5633-48e0-b2f8-591a5d0bfdfb</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="appsettings.production.json" />
-    <Content Remove="appsettings.staging.json" />
-  </ItemGroup>
 
   <!--<ItemGroup>
     <None Include="appsettings.production.json">
