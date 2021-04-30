@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+
 using Serilog;
 
 namespace Net5.Web.Api {
@@ -38,8 +41,27 @@ namespace Net5.Web.Api {
 
             services.AddControllers();
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Net5.Web.Api", Version = "v1" });
+                c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "Net5.Web.Api v1.1", Version = "v1.1" });
+                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "Net5.Web.Api v1.0", Version = "v1.0", Description = "Deprecated" });
+                c.DocInclusionPredicate((docName, apiDesc) => {
+                    var actionApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
+                    // would mean this action is unversioned and should be included everywhere
+                    if (actionApiVersionModel == null) {
+                        return true;
+                    }
+                    if (actionApiVersionModel.DeclaredApiVersions.Any()) {
+                        return actionApiVersionModel.DeclaredApiVersions.Any(v => $"v{v}" == docName);
+                    }
+                    return actionApiVersionModel.ImplementedApiVersions.Any(v => $"v{v}" == docName);
+                });
             });
+
+            services.AddApiVersioning(o => {
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.ApiVersionReader = new MediaTypeApiVersionReader();
+            });
+            //services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("x-api-version"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +86,10 @@ namespace Net5.Web.Api {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Net5.Web.Api v1"));
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "Net5.Web.Api v1.1");
+                    c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Net5.Web.Api v1.0");
+                });
             }
             app.UseSerilogRequestLogging();
 
