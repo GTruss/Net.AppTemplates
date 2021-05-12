@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Json;
+using Serilog.Sinks.MSSqlServer;
 
 namespace Net5.Cli {
     public static class SerilogConfig {
@@ -15,9 +16,22 @@ namespace Net5.Cli {
             Log.Logger = new LoggerConfiguration()
                             .ReadFrom.Configuration(config)
                             .Enrich.FromLogContext().Enrich.WithMachineName()
-                            .WriteTo.Console()
-                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                            .Enrich.FromLogContext()
+                            .Enrich.With<EventTypeEnricher>()
+                            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(new JsonFormatter(), logFileName + ".json")
+                            .WriteTo.MSSqlServer(
+                                config.GetConnectionString("Sandbox"),                                
+                                sinkOptions: new MSSqlServerSinkOptions() {
+                                    AutoCreateSqlTable = true,
+                                    TableName = "tbl_Log",
+                                    SchemaName = "dbo"
+                                },
+                                appConfiguration: config,
+                                columnOptionsSection: config.GetSection("Serilog:ColumnOptions"),
+                                logEventFormatter: new JsonFormatter()
+                            )
                             .CreateLogger();
         }
     }

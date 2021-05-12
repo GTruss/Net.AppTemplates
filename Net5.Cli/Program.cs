@@ -7,7 +7,8 @@ using Microsoft.Extensions.Hosting;
 
 // Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
 
-// .bat file needed to set environment variables on the server
+// .bat file needed to set appropriate environment variable on the server,
+// or run from cmd /k
 // setx DOTNET_ENVIRONMENT Development /M
 // setx DOTNET_ENVIRONMENT Staging /M
 // setx DOTNET_ENVIRONMENT Production /M
@@ -123,7 +124,7 @@ namespace Net5.Cli {
     }
 
     public record LogArchive {
-         public ExpirationSettings Expiration { get; set; }
+        public ExpirationSettings Expiration { get; set; }
 
         public record ExpirationSettings {
             public string Interval { get; set; }
