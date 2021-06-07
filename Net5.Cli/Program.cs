@@ -21,6 +21,17 @@ namespace Net5.Cli {
         static ILogger _logger;
         static IConfiguration _config;
     
+        /// <summary>
+        /// This is the Composition Root of this application.
+        /// Only app & cross-cutting concerns setup should go here (appsettings, logging, DI, etc).
+        /// Call appropriate Services as defined in Net5.ApplicationServices.
+        /// This eliminates the need for Services to have references to every dependency, as 
+        ///   the DI Composition Root does. Allows for more flexible late-binding. Why should the
+        ///   Main service have a dependency to SQL repositories, for example. It shouldn't care.
+        ///   So, the CLI, in this case, will have dependencies to everything for the DI container
+        ///   but the actual driver "MainService" shouldn't.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args) {
             DateTime startTime = DateTime.Now;
             try {
@@ -41,8 +52,8 @@ namespace Net5.Cli {
                     _logger.Error("Missing/Unexpected environment variable: DOTNET_ENVIRONMENT = {env} (expected 'Development', 'Staging' or 'Production').", env);
                     // Microsoft's default is to "fallback" to Production if the DOTNET_ENVIRONMENT
                     // doesn't exist. This is bad. If it's a manual deployment to the Development or Staging
-                    // environment and they forget to add the Environment Variable, it will run the Production
-                    // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes. Err on the side of caution.
+                    // environment and they forget to create the Environment Variable, it will run the Production
+                    // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes and skip steps. Err on the side of caution.
                     // So, require that the Environment Variable to be set AND it must be one of the three.
                     return;
                 }
