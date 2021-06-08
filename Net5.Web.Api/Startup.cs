@@ -41,6 +41,7 @@ namespace Net5.Web.Api {
 
             services.AddControllers();
             services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "Net5.Web.Api v2.0", Version = "v2.0" });
                 c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "Net5.Web.Api v1.1", Version = "v1.1" });
                 c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "Net5.Web.Api v1.0", Version = "v1.0", Description = "Deprecated" });
                 c.DocInclusionPredicate((docName, apiDesc) => {
@@ -57,7 +58,7 @@ namespace Net5.Web.Api {
             });
 
             services.AddApiVersioning(o => {
-                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.DefaultApiVersion = new ApiVersion(2, 0);
                 o.AssumeDefaultVersionWhenUnspecified = true;
                 o.ApiVersionReader = new MediaTypeApiVersionReader();
             });
@@ -87,6 +88,7 @@ namespace Net5.Web.Api {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Net5.Web.Api v2.0");
                     c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "Net5.Web.Api v1.1");
                     c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Net5.Web.Api v1.0");
                 });
