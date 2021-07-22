@@ -15,8 +15,8 @@ namespace Net5.Cli {
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
             Log.Logger = new LoggerConfiguration()
                             .ReadFrom.Configuration(config)
-                            .Enrich.FromLogContext().Enrich.WithMachineName()
                             .Enrich.FromLogContext()
+                            .Enrich.WithMachineName()
                             .Enrich.With<EventTypeEnricher>()
                             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")

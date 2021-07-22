@@ -27,7 +27,7 @@ namespace Net5.Cli {
         /// Call appropriate Services as defined in Net5.ApplicationServices.
         /// This eliminates the need for Services to have references to every dependency, as 
         ///   the DI Composition Root does. Allows for more flexible late-binding. Why should the
-        ///   Main service have a dependency to SQL repositories, for example. It shouldn't care.
+        ///   Main service have a dependency to SQL and Mongo and Oracle and (n) repositories, for example. It shouldn't care.
         ///   So, the CLI, in this case, will have dependencies to everything for the DI container
         ///   but the actual driver "MainService" shouldn't.
         /// </summary>
