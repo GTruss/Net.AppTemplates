@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Microsoft.Extensions.Hosting;
 
+using Net5.DependencyInjection;
+
 // Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
 
 // .bat file needed to set appropriate environment variable on the server,
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Net5.Cli {
     class Program {
+
         static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
         static readonly bool isDev = env == "Development";
         static IHost _host;
@@ -59,7 +62,7 @@ namespace Net5.Cli {
                 }
 
                 // Setup DI
-                _host = DIContainerConfig.Configure(_config);
+                _host = AppHostContainer.Configure(_config);
 
                 // Create a new local scope and run the Main service
                 using (var scope = _host.Services.CreateScope()) {

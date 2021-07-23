@@ -9,8 +9,8 @@ using Murmur;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Net5.Cli {
-    class EventTypeEnricher : ILogEventEnricher {
+namespace Net5.Common.Serilog {
+    public class EventTypeEnricher : ILogEventEnricher {
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory) {
             var murmur = MurmurHash.Create32();
             var bytes = Encoding.UTF8.GetBytes(logEvent.MessageTemplate.Text);
