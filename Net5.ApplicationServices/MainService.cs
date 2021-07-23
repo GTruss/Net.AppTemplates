@@ -1,21 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
 using Serilog.Context;
+
+using Net5.Data.Sandbox.Entities;
+
 
 namespace Net5.Cli {
     public class MainService {
         private readonly ILogger<MainService> _log;
         private readonly IConfiguration _config;
-        // private readonly YourDataContext _db;
+        private readonly SandboxContext _db;
 
-        //public MainService(ILogger<MainService> log, IConfiguration config, YourDataContext db) {
-        public MainService(ILogger<MainService> log, IConfiguration config) {
+        public MainService(ILogger<MainService> log, IConfiguration config, SandboxContext db) {
+        //public MainService(ILogger<MainService> log, IConfiguration config) {
             _log = log;
             _config = config;
-            //_db = db;
+            _db = db;
         }
 
         public void Run() {
@@ -48,6 +52,10 @@ namespace Net5.Cli {
             for (int i = 0; i <= 10; i++) {
                 _log.LogInformation("Processing {i} of {iCount}", i, iCount);
             }
+
+            var logEntries = _db.tbl_Logs.Count();
+
+            _log.LogInformation("There are {cnt} log entries in the database.", logEntries);
 
             _log.LogWarning("Danger. A fatal exception is about to occur.");
 

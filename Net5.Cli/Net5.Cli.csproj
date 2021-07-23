@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Net5.ApplicationServices\Net5.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Net5.Data.Entities\Net5.Data.Sandbox.Entities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
