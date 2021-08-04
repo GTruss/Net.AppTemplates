@@ -59,10 +59,31 @@
         <Property Id="ARPURLINFOABOUT">http://www.isi85.com</Property>
 
         <!-- Create a basic UI for the installer -->
-        <UIRef Id="WixUI_Minimal" />
-    
+        <!--<UIRef Id="WixUI_Minimal" />-->
+        <UI Id="UserInterface">
+          <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
+          <Property Id="WixUI_Mode" Value="Custom" />
+
+          <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+          <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="9" Bold="yes" />
+          <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="9" Bold="yes" />
+
+          <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+
+          <DialogRef Id="ProgressDlg" />
+          <DialogRef Id="ErrorDlg" />
+          <DialogRef Id="FilesInUse" />
+          <DialogRef Id="FatalError" />
+          <DialogRef Id="UserExit" />
+
+          <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+          <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
+
+        </UI>
+        <UIRef Id="WixUI_Common" />
+      
         <!-- Change the installer UI background images -->
-        <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\License.rtf" />
+        <!--<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\License.rtf" />-->
         <WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
         <WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
 
