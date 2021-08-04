@@ -17,6 +17,14 @@ using Microsoft.Extensions.Logging;
 using Serilog.Core;
 using Net5.Common.Serilog;
 
+// Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
+
+// .bat file needed to set appropriate environment variable on the server,
+// or run from cmd /k
+// setx DOTNET_ENVIRONMENT Development /M
+// setx DOTNET_ENVIRONMENT Staging /M
+// setx DOTNET_ENVIRONMENT Production /M
+
 namespace Net5.Win {
     static class Program {
 

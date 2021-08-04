@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Fragment>
+    
+    <!-- Product Components -->
+    <ComponentGroup Id="ProductComponents">
+
+      <!-- Shortcut -->
+      <ComponentRef Id="MainAppShortcut" />
+
+      <!-- Environment -->
+      <ComponentRef Id="Environment" />
+      
+    </ComponentGroup>
+
+    <!-- Installed files -->
+    <DirectoryRef Id="INSTALLFOLDER" FileSource="..\Net5.Win\bin\Debug\net5.0-windows\win-$(var.Platform)\publish\">
+
+      <!-- Shortcut to main application -->
+      <Component Id="MainAppShortcut" Guid="{0995664D-AE63-4DD6-B894-708A99611370}">
+
+        <Shortcut Id="MainAppShortcut"
+                  Name="!(loc.ProductName_$(var.Platform)_$(var.Configuration))"
+                  Target="[INSTALLFOLDER]Net5.Win.exe"
+                  Directory="InstallProgramMenuFolder"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="icon.ico"
+                  />
+
+        <!-- Our unique key for this component/shortcut -->
+        <RegistryValue Id="RegShortcutKey" Root="HKCU" Key="SOFTWARE\!(loc.ProductNameFolder)" Name="Shortcut" Value="1" Type="integer" KeyPath="yes" />
+        
+        <!--Remove start menu items -->
+        <RemoveFolder Id="RemoveStartMenu" Directory="InstallProgramMenuFolder" On="uninstall" />
+        
+      </Component>
+
+    </DirectoryRef>
+    
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="Environment" Guid="{E35D5EBC-C8EB-40B9-8FA6-CD2E0F6FFFC8}">
+        <Environment Id="DOTNETENVIRONMENT" Name="DOTNET_ENVIRONMENT" Value="$(var.Configuration)" Permanent="no" Part="all" Action="set" System="yes" />
+      </Component>
+    </DirectoryRef>
+    
+  </Fragment>
+ 
+
+</Wix>
