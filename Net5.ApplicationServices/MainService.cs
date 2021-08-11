@@ -16,7 +16,6 @@ namespace Net5.Cli {
         private readonly SandboxContext _db;
 
         public MainService(ILogger<MainService> log, IConfiguration config, SandboxContext db) {
-        //public MainService(ILogger<MainService> log, IConfiguration config) {
             _log = log;
             _config = config;
             _db = db;
