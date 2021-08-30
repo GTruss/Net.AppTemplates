@@ -56,7 +56,7 @@
         <!-- Use the icon.ico icon for this installer (shows up in Add/Remove programs) -->
         <Property Id="ARPPRODUCTICON">icon.ico</Property>
         <!-- Help/Support website (shows in the Add/Remove programs) -->
-        <Property Id="ARPURLINFOABOUT">http://www.isi85.com</Property>
+        <Property Id="ARPURLINFOABOUT">http://www.mysite.com</Property>
 
         <!-- Create a basic UI for the installer -->
         <!--<UIRef Id="WixUI_Minimal" />-->
