@@ -45,7 +45,7 @@ namespace Net5.Win {
             _config = BuildConfig(builder);
 
             // Setup Serilog          
-            var sink = SerilogConfig.Configure(_config);
+            SerilogConfig.Configure(_config, out InMemorySink memSink, out InMemorySink flatSink);
             _logger = Log.Logger;
             _logger.Information("Windows App Startup");
 
@@ -68,7 +68,7 @@ namespace Net5.Win {
 
             using (var scope = _host.Services.CreateScope()) {
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<MainForm>>();
-                var mainForm = new MainForm(scope, logger, _config, sink.Events);
+                var mainForm = new MainForm(scope, logger, _config, memSink.Events, flatSink.Events);
                 Application.Run(mainForm);
             };
         }

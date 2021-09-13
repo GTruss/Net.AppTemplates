@@ -26,22 +26,38 @@ namespace Net5.Win {
         private readonly ILogger<MainForm> _logger;
         private readonly IConfiguration _configuration;
         private readonly LogEventQueue<string> _logEvents;
+        private readonly LogEventQueue<string> _logEventsFlat;
 
-        public MainForm(IServiceScope scope, ILogger<MainForm> logger, IConfiguration configuration, LogEventQueue<string> logEvents) {
+        private string _errorCode = string.Empty;
+
+        public MainForm(IServiceScope scope, ILogger<MainForm> logger, IConfiguration configuration, 
+                        LogEventQueue<string> logEvents, LogEventQueue<string> logEventsFlat) {
             _scope = scope;
             _logger = logger;
             _configuration = configuration;
             _logEvents = logEvents;
+            _logEventsFlat = logEventsFlat;
         
             InitializeComponent();
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
             _logEvents.Enqueued += _logEvents_Enqueued;
+            _logEventsFlat.Enqueued += _logEventsFlat_Enqueued;
         }
 
         private void _logEvents_Enqueued(object? sender, LogEventQueueArgs e) {
             txtLog.AppendText(e.Message);
+        }
+
+        private void _logEventsFlat_Enqueued(object? sender, LogEventQueueArgs e) {
+            var items = e.Message.Split('|');
+            if (items[2] == "ERR") {
+                _errorCode = items[1];
+            }
+            else {
+                _errorCode = string.Empty;
+            }
         }
 
         private void btnRun_Click(object sender, EventArgs e) {
@@ -53,6 +69,9 @@ namespace Net5.Win {
             }
             catch (Exception ex) {
                 _logger.LogError(ex, ex.Message);
+                if (!string.IsNullOrEmpty(_errorCode)) {
+                    MessageBox.Show($"An error has occured. Please contact the Help Desk with reference to the following error code: {_errorCode}.");
+                }
             }
         }
     }

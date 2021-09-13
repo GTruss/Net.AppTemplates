@@ -9,16 +9,18 @@ using System;
 
 namespace Net5.Win {
     public static class SerilogConfig {
-        public static InMemorySink Configure(IConfiguration config) {
+        public static void Configure(IConfiguration config, out InMemorySink memSink, out InMemorySink flatSink) {
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{DateTime.Now:yyyyMMdd_HHmmss}.log";
-            var sink = new InMemorySink("[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}");
+            memSink = new InMemorySink("[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}");
+            flatSink = new InMemorySink("{Timestamp:HH:mm:ss.fff}|{EventType}|{Level:u3}|{Message:lj}|{Exception}");
 
             Log.Logger = new LoggerConfiguration()
                             .ReadFrom.Configuration(config)
                             .Enrich.FromLogContext()
                             .Enrich.WithMachineName()
                             .Enrich.With<EventTypeEnricher>()
-                            .WriteTo.Sink(sink)
+                            .WriteTo.Sink(memSink)
+                            .WriteTo.Sink(flatSink)
                             .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.MSSqlServer(
                                 config.GetConnectionString("Sandbox"),                                
@@ -32,7 +34,6 @@ namespace Net5.Win {
                                 logEventFormatter: new JsonFormatter()
                             )
                             .CreateLogger();
-            return sink;
         }
     }
 }
