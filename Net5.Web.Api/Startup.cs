@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -20,6 +21,8 @@ using Net5.Cli;
 using Net5.Common.Serilog;
 using Net5.Data.Sandbox.Entities;
 using Net5.Web.Api.Middleware;
+
+using Newtonsoft.Json;
 
 using Serilog;
 using Serilog.Formatting.Json;
@@ -103,7 +106,7 @@ namespace Net5.Web.Api {
             //
             // This allows each Controller and Method to be wired up independently for versioning.
             services.AddApiVersioning(o => {
-                o.DefaultApiVersion = new ApiVersion(2, 0);
+                o.DefaultApiVersion = new ApiVersion(3, 0);
                 o.AssumeDefaultVersionWhenUnspecified = true;
                 o.ApiVersionReader = new HeaderApiVersionReader("x-api-version"); // Use Request Header versioning
             });
@@ -146,6 +149,12 @@ namespace Net5.Web.Api {
             services.AddDbContext<SandboxContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("Sandbox"))
             );
+
+            services.AddHealthChecks()
+                //.AddUrlGroup(new Uri("http://localhost:31381/api/MainService"), 
+                //             name: "Main Service")
+                .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"), 
+                             name: "Weather Service");
 
         }
 
@@ -195,6 +204,22 @@ namespace Net5.Web.Api {
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new() {
+                    ResponseWriter = async (context, report) => {
+                        context.Response.ContentType = "application/json";
+                        var response = new {
+                            Status = report.Status.ToString(),
+                            HealthChecks = report.Entries.Select(x => new
+                            {
+                                Component = x.Key,
+                                Status = x.Value.Status.ToString(),
+                                Description = x.Value.Description
+                            }),
+                            HealthCheckDuration = report.TotalDuration,
+                        };
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(response)).ConfigureAwait(false);
+                    }
+                });
             });
         }
 
