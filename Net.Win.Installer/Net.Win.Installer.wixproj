@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>7001a624-65ab-49c2-829b-9cd39fd49ae3</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Net5.Win-$(Platform)-$(Configuration)</OutputName>
+    <OutputName>Net.Win-$(Platform)-$(Configuration)</OutputName>
     <OutputType>Package</OutputType>
     <Cultures>;</Cultures>
   </PropertyGroup>

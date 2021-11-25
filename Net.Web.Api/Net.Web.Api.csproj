@@ -36,8 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Net5.ApplicationServices\Net5.ApplicationServices.csproj" />
-    <ProjectReference Include="..\Net5.Common\Net5.Common.csproj" />
+    <ProjectReference Include="..\Net.ApplicationServices\Net.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Net.Common\Net.Common.csproj" />
   </ItemGroup>
 
 </Project>
