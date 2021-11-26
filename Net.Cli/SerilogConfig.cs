@@ -6,6 +6,7 @@ using Serilog.Formatting.Json;
 using Serilog.Sinks.MSSqlServer;
 
 using Net5.Common.Serilog;
+using Net.Common.Serilog;
 
 namespace Net5.Cli {
     public static class SerilogConfig {
@@ -16,8 +17,9 @@ namespace Net5.Cli {
                             .Enrich.FromLogContext()
                             .Enrich.WithMachineName()
                             .Enrich.With<EventTypeEnricher>()
-                            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                            .Enrich.With<SourceContextClassEnricher>()
+                            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
+                            .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(new JsonFormatter(), logFileName + ".json")
                             .WriteTo.MSSqlServer(
                                 config.GetConnectionString("Sandbox"),                                

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
 using Net5.Data.Sandbox.Entities;
-
+using Serilog;
 
 namespace Net5.Cli {
     public class MainService {
@@ -22,6 +22,7 @@ namespace Net5.Cli {
         }
 
         public void Run() {
+            
             // Main driver for this application..
             _log.LogDebug("MainService.Run()");
 
@@ -33,10 +34,17 @@ namespace Net5.Cli {
             // Do some logging...
             _log.LogInformation("Logging first value {FirstValue}", FirstValue);
 
-            // Logging within a "context"
-            using (LogContext.PushProperty("FirstValue", FirstValue)) {
+
+            // Logging within a "context" with MS Extensions.Logging
+            using (LogContext.PushProperty("FirstValue", FirstValue)) 
+            using (LogContext.PushProperty("AnotherProperty", "SomeValue")) {
                 _log.LogInformation("Logging second value {SecondValue}", SecondValue);
             }
+
+            // Logging within a "context" with Serilog
+            Log.ForContext<MainService>() // Sets SourceContext property
+               .ForContext("FirstValue", FirstValue) // Creates custom property
+               .Information("Logging with Context with Serilog");
 
             try {
                 int i = 0;
