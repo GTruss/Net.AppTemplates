@@ -17,6 +17,14 @@ using System.Linq;
 
 namespace App.FunctionalTests {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup> {
+        private ILogger<CustomWebApplicationFactory<TStartup>> _logger;
+
+        //public CustomWebApplicationFactory(ILogger<CustomWebApplicationFactory<TStartup>> logger) {
+        //    _logger = logger;
+        //}
+
+
+
         /// <summary>
         /// Overriding CreateHost to avoid creating a separate ServiceProvider per this thread:
         /// https://github.com/dotnet-architecture/eShopOnWeb/issues/465
@@ -25,6 +33,20 @@ namespace App.FunctionalTests {
         /// <returns></returns>
         protected override IHost CreateHost(IHostBuilder builder) {
             var host = builder.Build();
+
+            using (var scope = host.Services.CreateScope()) {
+                var services = scope.ServiceProvider;
+                _logger = services.GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+            }
+
+            //_logger.LogInformation("host:\n{@host}", host);
+
+            string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (string.IsNullOrEmpty(envstr)) {
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+            }
+
 
             // Get service provider.
             var serviceProvider = host.Services;

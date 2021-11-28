@@ -51,8 +51,8 @@ namespace App.Web {
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.AddSQLServerDbContext(Configuration.GetConnectionString("SQLServerConnection"));
-            services.AddSQLiteDbContext(Configuration.GetConnectionString("SqliteConnection"));
+            services.AddSQLServerDbContext(Configuration.GetConnectionString("SQLServerConnection"));
+            //services.AddSQLiteDbContext(Configuration.GetConnectionString("SqliteConnection"));
 
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
