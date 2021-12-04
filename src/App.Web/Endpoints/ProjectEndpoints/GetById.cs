@@ -27,7 +27,7 @@ namespace App.Web.Endpoints.ProjectEndpoints {
             Summary = "Gets a single Project",
             Description = "Gets a single Project by Id",
             OperationId = "Projects.GetById",
-            Tags = new[] { "ProjectEndpoints" })
+            Tags = new[] { "ProjectEndpoints", "ProjectEs" })
         ]
         public override async Task<ActionResult<GetProjectByIdResponse>> HandleAsync([FromRoute] GetProjectByIdRequest request,
             CancellationToken cancellationToken) {
