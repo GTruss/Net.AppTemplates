@@ -9,6 +9,8 @@ using System.Reflection;
 
 using Module = Autofac.Module;
 using App.Data.Models;
+using MediatR;
+using MediatR.Pipeline;
 
 namespace App.Infrastructure {
     public class DefaultInfrastructureModule : Module {
@@ -42,7 +44,7 @@ namespace App.Infrastructure {
                 .As(typeof(IReadRepository<>))
                 .InstancePerLifetimeScope();
 
-/*            builder
+            builder
                 .RegisterType<Mediator>()
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
@@ -66,10 +68,7 @@ namespace App.Infrastructure {
                 .AsClosedTypesOf(mediatrOpenType)
                 .AsImplementedInterfaces();
             }
-
-            builder.RegisterType<EmailSender>().As<IEmailSender>()
-                .InstancePerLifetimeScope();
-*/        }
+        }
 
         private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder) {
             // TODO: Add development only services

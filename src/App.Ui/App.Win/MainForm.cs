@@ -75,38 +75,5 @@ namespace App.Win {
                 }
             }
         }
-
-        private void btnAfterRun_Click(object sender, EventArgs e) {
-            try {
-                using (var scope = _scope.ServiceProvider.CreateScope()) {
-                    var _repo = scope.ServiceProvider.GetRequiredService<IRepository<Log>>();
-                    var count = _repo.GetCountAsync().Result;
-                    Trace.WriteLine(count);
-                };
-
-                var builder = new DbContextOptionsBuilder<SandboxContext>()
-                    .UseSqlServer(_configuration.GetConnectionString("Sandbox"));
-                    
-
-                SandboxContext ctx = new SandboxContext(builder.Options);
-                var l = ctx.Logs.CountAsync().Result;
-                Trace.WriteLine(l);
-
-                l = ctx.Set<Log>().CountAsync().Result;
-                Trace.WriteLine(l);
-
-                IRepository<Log> repo = new EfRepository<Log>(ctx);
-                l = repo.GetCountAsync().Result;
-                Trace.WriteLine(l);
-
-            }
-            catch (Exception ex) {
-                _logger.LogError(ex, ex.Message);
-                if (!string.IsNullOrEmpty(_errorCode)) {
-                    MessageBox.Show($"An error has occured. Please contact the Help Desk with reference to the following error code: {_errorCode}.");
-                }
-            }
-
-        }
     }
 }
