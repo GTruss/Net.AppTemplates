@@ -37,10 +37,10 @@
 	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>	  
-    <ProjectReference Include="..\..\App.Core\App.Services\App.Services.csproj" />
-    <ProjectReference Include="..\..\App.Infrastructure\App.Infrastructure\App.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\App.Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\App.Services\App.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\App.Infrastructure\App.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj" />
   </ItemGroup>
 
 </Project>

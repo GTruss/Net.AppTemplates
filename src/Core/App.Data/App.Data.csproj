@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\App.Core\App.Data\App.Data.csproj" />
+    <ProjectReference Include="..\..\Shared\App.SharedKernal\App.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

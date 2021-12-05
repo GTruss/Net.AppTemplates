@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Cli", "src\App.Ui\App.Cli\App.Cli.csproj", "{97E0C1C8-66F8-443A-B15A-5D398505D982}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Cli", "src\UI\App.Cli\App.Cli.csproj", "{97E0C1C8-66F8-443A-B15A-5D398505D982}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Api.Web", "src\App.Api\App.Api.Web\App.Api.Web.csproj", "{343EC8DA-4247-4DE3-B68A-6A069D74A105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Api.Web", "src\APIs\App.Api.Web\App.Api.Web.csproj", "{343EC8DA-4247-4DE3-B68A-6A069D74A105}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services", "src\App.Core\App.Services\App.Services.csproj", "{A2E8832F-0089-4F11-B3CB-5E8A78090671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services", "src\Core\App.Services\App.Services.csproj", "{A2E8832F-0089-4F11-B3CB-5E8A78090671}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Win", "src\App.Ui\App.Win\App.Win.csproj", "{86414956-326E-495D-8F41-CC035185B926}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Win", "src\UI\App.Win\App.Win.csproj", "{86414956-326E-495D-8F41-CC035185B926}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "App.Win.Installer", "src\App.Ui\App.Win.Installer\App.Win.Installer.wixproj", "{7001A624-65AB-49C2-829B-9CD39FD49AE3}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "App.Win.Installer", "src\UI\App.Win.Installer\App.Win.Installer.wixproj", "{7001A624-65AB-49C2-829B-9CD39FD49AE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{030AF099-AC36-49BB-82DF-1E8DAB73A814}"
 EndProject
@@ -27,15 +27,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{449D79
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{B6B5556C-CB1C-43CC-B0B3-A79E3BA0D002}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Data", "src\App.Core\App.Data\App.Data.csproj", "{EDAA2222-F645-4F91-8877-B7A20006E5A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Data", "src\Core\App.Data\App.Data.csproj", "{EDAA2222-F645-4F91-8877-B7A20006E5A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Data.Sandbox", "src\App.Infrastructure\App.Data\App.Data.Sandbox.csproj", "{5D729F3F-FE3A-44FD-A8D0-9D004ADADA8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Data.Sandbox", "src\Infrastructure\App.Data\App.Data.Sandbox.csproj", "{5D729F3F-FE3A-44FD-A8D0-9D004ADADA8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "My.Shared.Logging.Serilog", "src\App.Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj", "{BB0BE951-0CE4-4C5B-9FA2-1FC821E63C97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "My.Shared.Logging.Serilog", "src\Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj", "{BB0BE951-0CE4-4C5B-9FA2-1FC821E63C97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.SharedKernel", "src\App.Shared\App.SharedKernal\App.SharedKernel.csproj", "{63A8F662-F491-4917-848A-FB1E614E54D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.SharedKernel", "src\Shared\App.SharedKernal\App.SharedKernel.csproj", "{63A8F662-F491-4917-848A-FB1E614E54D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Infrastructure", "src\App.Infrastructure\App.Infrastructure\App.Infrastructure.csproj", "{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Infrastructure", "src\Infrastructure\App.Infrastructure\App.Infrastructure.csproj", "{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

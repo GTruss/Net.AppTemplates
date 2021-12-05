@@ -21,9 +21,9 @@
   </ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\App.Core\App.Services\App.Services.csproj" />
-    <ProjectReference Include="..\..\App.Infrastructure\App.Infrastructure\App.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\App.Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj" />
+    <ProjectReference Include="..\..\Core\App.Services\App.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\App.Infrastructure\App.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj" />
   </ItemGroup>
 
   <ItemGroup>
