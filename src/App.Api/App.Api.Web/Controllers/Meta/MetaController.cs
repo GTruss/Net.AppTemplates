@@ -9,6 +9,9 @@ using System.Net;
 using System.Threading.Tasks;
 
 namespace App.Api.Web {
+    [ApiController]
+    [ApiExplorerSettings(GroupName = "v3.1")]
+    [ApiVersion("3.1")]
     public class MetaController : ControllerBase {
         private readonly HealthCheckService _healthCheckService;
 

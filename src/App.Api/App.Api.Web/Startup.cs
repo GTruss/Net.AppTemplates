@@ -75,10 +75,16 @@ namespace App.Api.Web {
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v3.0", new OpenApiInfo { Title = "App.Api.Web v3.0", Version = "v3.0", Description = "Now supports the MainService." });
-                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "App.Api.Web v2.0", Version = "v2.0", Description = "Returns 10 forecasts" });
-                c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "App.Api.Web v1.1", Version = "v1.1", Description = "Returns higher range of 5 forecasts." });
-                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "App.Api.Web v1.0", Version = "v1.0", Description = "Returns 5 forecasts. Deprecated." });
+                // Added Meta controller
+                c.SwaggerDoc("v3.1", new OpenApiInfo { Title = "App.Api.Web", Version = "v3.1", Description = "A sample Web API project." });
+                // Added MainService controller
+                c.SwaggerDoc("v3.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v3.0", Description = "Now supports the MainService." });
+                // Weather Forecaster v2
+                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v2.0", Description = "Returns 10 forecasts" });
+                // Bug fixes
+                c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "App.Api.Web", Version = "v1.1", Description = "Returns higher range of 5 forecasts." });
+                // Initial release
+                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v1.0", Description = "Returns 5 forecasts. Deprecated." });
                 c.EnableAnnotations();
                 c.DocInclusionPredicate((docName, apiDesc) => {
                     var actionApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
@@ -110,7 +116,7 @@ namespace App.Api.Web {
             //
             // This allows each Controller and Method to be wired up independently for versioning.
             services.AddApiVersioning(o => {
-                o.DefaultApiVersion = new ApiVersion(3, 0);
+                o.DefaultApiVersion = new ApiVersion(3, 1);
                 o.AssumeDefaultVersionWhenUnspecified = true;
                 o.ApiVersionReader = new HeaderApiVersionReader("x-api-version"); // Use Request Header versioning
             });
@@ -188,6 +194,7 @@ namespace App.Api.Web {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v3.1/swagger.json", "App.Api.Web v3.1");
                     c.SwaggerEndpoint("/swagger/v3.0/swagger.json", "App.Api.Web v3.0");
                     c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "App.Api.Web v2.0");
                     c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "App.Api.Web v1.1");

@@ -9,11 +9,13 @@ using Microsoft.Extensions.Logging;
 namespace App.Api.Web.Controllers {
     [ApiVersion("2.0")]
     [ApiVersion("3.0")]
+    [ApiVersion("3.1")]
     public partial class WeatherForecastController : ControllerBase {
 
         [HttpGet]
         [MapToApiVersion("2.0")]
         [MapToApiVersion("3.0")]
+        [MapToApiVersion("3.1")]
         public IEnumerable<WeatherForecast> Get_V2_0() {
             var rng = new Random();
             _logger.LogInformation("Get Forecast called {dbl}", rng.NextDouble());

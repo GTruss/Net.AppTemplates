@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Logging;
 
 namespace App.Api.Web.Controllers {
@@ -28,7 +29,6 @@ namespace App.Api.Web.Controllers {
         // Examples of Versioning specific HTTP Requests
         //[HttpGet(Name = "GetTalksForSpeaker"), MapToApiVersion("2.0")]
         [MapToApiVersion("1.0")]
-        //[MapToApiVersion("4.30")]
         public IEnumerable<WeatherForecast> Get() {
             var rng = new Random();
             _logger.LogInformation("Get Forecast called {dbl}", rng.NextDouble());

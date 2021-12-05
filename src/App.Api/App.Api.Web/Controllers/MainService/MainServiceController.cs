@@ -15,6 +15,7 @@ namespace App.Api.Web.Controllers {
     [ApiController]
     [ApiExplorerSettings(GroupName = "v3.0")]
     [ApiVersion("3.0")]
+    [ApiVersion("3.1")]
     public partial class MainServiceController : ControllerBase {
         private readonly ILogger<MainServiceController> _logger;
         private readonly MainService _mainService;
@@ -26,10 +27,11 @@ namespace App.Api.Web.Controllers {
 
         [HttpGet]
         [MapToApiVersion("3.0")]
+        [MapToApiVersion("3.1")]
         public async Task<ActionResult> Get() {
             try {
                 _logger.LogInformation("Running MainService...");
-                _mainService.Run();
+                await _mainService.Run().ConfigureAwait(false);
                 _logger.LogInformation("MainService finished.");
 
                 return Ok("Success");
