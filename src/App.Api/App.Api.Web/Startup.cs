@@ -26,6 +26,7 @@ using My.Shared.Logging.Serilog;
 using App.Services;
 using App.Api.Web.Middleware;
 using App.Infrastructure;
+using System.Configuration;
 
 namespace App.Api.Web {
     public class Startup {
@@ -33,14 +34,13 @@ namespace App.Api.Web {
         private ILogger<Startup> _logger;
 
         public Startup(IConfiguration configuration, IHostEnvironment env) {
+            _configuration = configuration;
 
-            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
+            _ = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            builder.Build();
-            _configuration = configuration;
+                .AddEnvironmentVariables()
+                .Build();
 
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
             Log.Logger = new LoggerConfiguration()
@@ -48,8 +48,9 @@ namespace App.Api.Web {
                     .Enrich.FromLogContext()
                     .Enrich.WithMachineName()
                     .Enrich.With<EventTypeEnricher>()
-                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                    .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                    .Enrich.With<SourceContextClassEnricher>()
+                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
+                    .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                     .WriteTo.File(new JsonFormatter(), logFileName + ".json")
                     .WriteTo.MSSqlServer(
                         configuration.GetConnectionString("Sandbox"),
@@ -65,11 +66,14 @@ namespace App.Api.Web {
                     .CreateLogger();
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            services.Configure<CookiePolicyOptions>(options => {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v3.0", new OpenApiInfo { Title = "App.Api.Web v3.0", Version = "v3.0", Description = "Now supports the MainService." });
                 c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "App.Api.Web v2.0", Version = "v2.0", Description = "Returns 10 forecasts" });
@@ -161,7 +165,9 @@ namespace App.Api.Web {
             _logger = logger;
 
             string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            _logger.LogInformation("EnvStr={envstr}", envstr);
+            Log.ForContext<Startup>()
+               .ForContext("Environment", envstr)
+               .Information("Environment: {env}", envstr);
 
             CleanupExpiredLogs();
 
@@ -193,12 +199,11 @@ namespace App.Api.Web {
             app.UseHeaderMiddleware();
 
             app.UseSerilogRequestLogging();
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
@@ -252,8 +257,8 @@ namespace App.Api.Web {
                     }
                 }
             }
-            catch {
-                //The log file directory doesn't exist yet, ignore
+            catch (Exception ex) {
+                Log.Error(ex, ex.Message);
                 return;
             }
         }
