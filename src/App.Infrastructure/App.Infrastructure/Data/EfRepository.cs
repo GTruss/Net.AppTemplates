@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace App.Infrastructure.Data {
 
-    public class EfRepository<T> : IRepository<T> where T : BaseEntity, IAggregateRoot {
+    public class EfRepository<T> : IRepository<T>, IReadRepository<T> where T : BaseEntity, IAggregateRoot {
         private readonly SandboxContext _dbContext;
 
         public EfRepository(SandboxContext dbContext) {

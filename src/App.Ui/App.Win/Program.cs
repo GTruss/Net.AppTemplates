@@ -1,21 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-using App.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using My.Shared.Logging.Serilog;
-using App.Services;
+using App.Infrastructure;
+using App.Core;
 
 // Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
 
@@ -42,7 +39,7 @@ namespace App.Win {
         static void Main() {
 
             var builder = new ConfigurationBuilder();
-            _config = BuildConfig(builder);
+            _config = CreateConfiguration(builder);
 
             // Setup Serilog          
             SerilogConfig.Configure(_config, out InMemorySink memSink, out InMemorySink flatSink);
@@ -65,7 +62,7 @@ namespace App.Win {
             }
 
             // Setup DI
-            _host = ConfigureDI(_config);
+            _host = CreateHost(_config);
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
@@ -78,27 +75,29 @@ namespace App.Win {
             };
         }
 
-        static IConfiguration BuildConfig(IConfigurationBuilder builder) {
+        static IConfiguration CreateConfiguration(IConfigurationBuilder builder) {
             // Setup Settings
             return builder.SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                          .AddJsonFile($"appsettings.{env}.json",
-                                       optional: false, reloadOnChange: true)
-                          .AddEnvironmentVariables()
-                          
-                          .Build();
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env}.json",
+                                optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables()
+                    .Build();
         }
 
-        public static IHost ConfigureDI(IConfiguration config) {
+        public static IHost CreateHost(IConfiguration config) {
             var host = Host.CreateDefaultBuilder()
-                        .ConfigureServices((context, services) => {
-                            services.AddTransient<IConfiguration>(context => config);
-                            services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
-                            services.RegisterInfrastructureDependencies();
-                            services.AddTransient<MainService, MainService>();
-                        })
-                        .UseSerilog()
-                        .Build();
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureServices((context, services) => {
+                    services.AddTransient<IConfiguration>(context => config);
+                    services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
+                })
+                .ConfigureContainer<ContainerBuilder>(container => {
+                    container.RegisterModule(new DefaultServicesModule());
+                    container.RegisterModule(new DefaultInfrastructureModule(env == "Development"));
+                })
+                .UseSerilog()
+                .Build();
 
             return host;
         }
@@ -132,8 +131,8 @@ namespace App.Win {
                     }
                 }
             }
-            catch {
-                //The log file directory doesn't exist yet, ignore
+            catch (Exception ex) {
+                Log.Error(ex, ex.Message);
                 return;
             }
         }

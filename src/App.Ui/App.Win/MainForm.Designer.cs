@@ -26,7 +26,6 @@ namespace App.Win {
         private void InitializeComponent() {
             this.btnRun = new System.Windows.Forms.Button();
             this.txtLog = new System.Windows.Forms.TextBox();
-            this.btnAfterRun = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnRun
@@ -51,23 +50,11 @@ namespace App.Win {
             this.txtLog.Size = new System.Drawing.Size(700, 299);
             this.txtLog.TabIndex = 1;
             // 
-            // btnAfterRun
-            // 
-            this.btnAfterRun.Location = new System.Drawing.Point(423, 9);
-            this.btnAfterRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnAfterRun.Name = "btnAfterRun";
-            this.btnAfterRun.Size = new System.Drawing.Size(82, 22);
-            this.btnAfterRun.TabIndex = 2;
-            this.btnAfterRun.Text = "After run";
-            this.btnAfterRun.UseVisualStyleBackColor = true;
-            this.btnAfterRun.Click += new System.EventHandler(this.btnAfterRun_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 338);
-            this.Controls.Add(this.btnAfterRun);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.btnRun);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -83,7 +70,6 @@ namespace App.Win {
 
         private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.TextBox txtLog;
-        private System.Windows.Forms.Button btnAfterRun;
     }
 }
 

@@ -27,14 +27,18 @@ using App.Services;
 using App.Api.Web.Middleware;
 using App.Infrastructure;
 using System.Configuration;
+using Autofac;
+using App.Core;
 
 namespace App.Api.Web {
     public class Startup {
         private readonly IConfiguration _configuration;
+        private readonly IHostEnvironment _env;
         private ILogger<Startup> _logger;
 
         public Startup(IConfiguration configuration, IHostEnvironment env) {
             _configuration = configuration;
+            _env = env;
 
             _ = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
@@ -157,7 +161,6 @@ namespace App.Api.Web {
             // Define Dependency Injected Services
             services.AddTransient<MainService>();
             services.AddSQLServerDbContext(_configuration.GetConnectionString("Sandbox"));
-            services.RegisterInfrastructureDependencies();
 
             services.AddHealthChecks()
                 .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"), 
@@ -165,6 +168,11 @@ namespace App.Api.Web {
                 .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"), 
                              name: "Weather Forecast");
 
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder) {
+            builder.RegisterModule(new DefaultServicesModule());
+            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

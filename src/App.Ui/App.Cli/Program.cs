@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using App.Infrastructure;
 using System.Configuration;
 using App.Services;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using App.Core;
 
 // Sets up DI, Logging (Serilog) and Configuration Settings (ConfigurationBuilder with appsettings.*.json files)
 
@@ -42,7 +45,7 @@ namespace App.Cli {
             try {
 
                 var builder = new ConfigurationBuilder();
-                _config = BuildConfig(builder);
+                _config = CreateConfiguration(builder);
 
                 // Setup Serilog
                 SerilogConfig.Configure(_config);
@@ -65,7 +68,7 @@ namespace App.Cli {
                 }
 
                 // Setup DI
-                _host = ConfigureDI(_config);
+                _host = CreateHost(_config);
 
                 // Create a new local scope and run the Main service
                 using (var scope = _host.Services.CreateScope()) {
@@ -100,26 +103,29 @@ namespace App.Cli {
             }
         }
 
-        static IConfiguration BuildConfig(IConfigurationBuilder builder) {
+        static IConfiguration CreateConfiguration(IConfigurationBuilder builder) {
             // Setup Settings
             return builder.SetBasePath(Directory.GetCurrentDirectory())
                           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                           .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")}.json",
-                                       optional: true, reloadOnChange: true)
+                                       optional: false, reloadOnChange: true)
                           .AddEnvironmentVariables()
                           .Build();
         }
 
-        public static IHost ConfigureDI(IConfiguration config) {
+        public static IHost CreateHost(IConfiguration config) {
             var host = Host.CreateDefaultBuilder()
-                        .ConfigureServices((context, services) => {
-                            services.AddTransient<IConfiguration>(context => config);
-                            services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
-                            services.RegisterInfrastructureDependencies();
-                            services.AddTransient<MainService, MainService>();
-                        })
-                        .UseSerilog()
-                        .Build();
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureServices((context, services) => {
+                    services.AddTransient<IConfiguration>(context => config);
+                    services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
+                })
+                .ConfigureContainer<ContainerBuilder>(container => {
+                    container.RegisterModule(new DefaultServicesModule());
+                    container.RegisterModule(new DefaultInfrastructureModule(env == "Development"));
+                })
+                .UseSerilog()
+                .Build();
 
             return host;
         }
@@ -153,8 +159,8 @@ namespace App.Cli {
                     }
                 }
             }
-            catch {
-                //The log file directory doesn't exist yet, ignore
+            catch (Exception ex) {
+                Log.Error(ex, ex.Message);
                 return;
             }
         }
