@@ -11,6 +11,8 @@ using Module = Autofac.Module;
 using App.Data.Models;
 using MediatR;
 using MediatR.Pipeline;
+using App.Services.Interfaces;
+using App.Services;
 
 namespace App.Infrastructure {
     public class DefaultInfrastructureModule : Module {
@@ -20,8 +22,10 @@ namespace App.Infrastructure {
         public DefaultInfrastructureModule(bool isDevelopment, Assembly callingAssembly = null) {
             _isDevelopment = isDevelopment;
             var coreAssembly = Assembly.GetAssembly(typeof(Log)); // TODO: Replace "Log" with any type from your Core project
+            var servicesAssembly = Assembly.GetAssembly(typeof(MainService)); // TODO: Replace "Log" with any type from your Core project
             var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
             _assemblies.Add(coreAssembly);
+            _assemblies.Add(servicesAssembly);
             _assemblies.Add(infrastructureAssembly);
             if (callingAssembly != null) {
                 _assemblies.Add(callingAssembly);
@@ -68,6 +72,9 @@ namespace App.Infrastructure {
                 .AsClosedTypesOf(mediatrOpenType)
                 .AsImplementedInterfaces();
             }
+
+            builder.RegisterType<EmailSender>().As<IEmailSender>()
+                .InstancePerLifetimeScope();
         }
 
         private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder) {

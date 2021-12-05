@@ -10,17 +10,22 @@ using Serilog;
 using App.SharedKernel.Interfaces;
 using Models = App.Data.Models;
 using System.Threading.Tasks;
+using App.Services.Events;
+using MediatR;
 
 namespace App.Services {
     public class MainService {
         private readonly ILogger<MainService> _log;
         private readonly IConfiguration _config;
         private readonly IRepository<Models.Log> _logRepo;
+        private readonly IMediator _mediator;
 
-        public MainService(ILogger<MainService> log, IConfiguration config, IRepository<Models.Log> logRepo) {
+        public MainService(ILogger<MainService> log, IConfiguration config, 
+            IRepository<Models.Log> logRepo, IMediator mediator) {
             _log = log;
             _config = config;
             _logRepo = logRepo;
+            _mediator = mediator;
         }
 
         public async Task Run() {
@@ -62,11 +67,14 @@ namespace App.Services {
                 _log.LogInformation("Processing {i} of {iCount}", i, iCount);
             }
 
-            //var logEntries = _logRepo.ListAsync().Result;
             
             var count = _logRepo.GetCountAsync().GetAwaiter().GetResult();
 
             _log.LogInformation("There are {cnt} log entries in the database.", count);
+
+            _log.LogInformation("Sending Event...");
+            var serviceEvent = new SomeServiceEvent("Test message from the Main Service.");
+            _mediator.Publish(serviceEvent).GetAwaiter().GetResult();
 
             _log.LogWarning("Danger. A fatal exception is about to occur.");
 

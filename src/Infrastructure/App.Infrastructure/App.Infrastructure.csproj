@@ -9,8 +9,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
 	<PackageReference Include="Autofac" Version="6.2.0" />
 	<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\App.Services\App.Services.csproj" />
     <ProjectReference Include="..\..\Shared\App.SharedKernal\App.SharedKernel.csproj" />
     <ProjectReference Include="..\App.Data\App.Data.Sandbox.csproj" />
   </ItemGroup>

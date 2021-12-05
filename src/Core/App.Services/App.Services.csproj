@@ -13,5 +13,8 @@
     <ProjectReference Include="..\..\Shared\App.SharedKernal\App.SharedKernel.csproj" />
     <ProjectReference Include="..\App.Data\App.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
 
 </Project>
