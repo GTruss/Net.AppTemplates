@@ -149,8 +149,6 @@ namespace App.Api.Web {
             services.AddSQLServerDbContext(_configuration.GetConnectionString("Sandbox"));
 
             services.AddHealthChecks()
-                .AddUrlGroup(new Uri("http://localhost:31381/api/Meta"), 
-                             name: "Meta")
                 .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"), 
                              name: "Main Service")
                 .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"), 
