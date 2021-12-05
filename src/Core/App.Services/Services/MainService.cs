@@ -72,7 +72,7 @@ namespace App.Services {
 
             _log.LogInformation("There are {cnt} log entries in the database.", count);
 
-            _log.LogInformation("Sending Event...");
+            _log.LogInformation("Sending Mediatr Event...");
             var serviceEvent = new SomeServiceEvent("Test message from the Main Service.");
             _mediator.Publish(serviceEvent).GetAwaiter().GetResult();
 
