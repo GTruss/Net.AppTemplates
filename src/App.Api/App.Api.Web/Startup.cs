@@ -157,6 +157,7 @@ namespace App.Api.Web {
             // Define Dependency Injected Services
             services.AddTransient<MainService>();
             services.AddSQLServerDbContext(_configuration.GetConnectionString("Sandbox"));
+            services.RegisterInfrastructureDependencies();
 
             services.AddHealthChecks()
                 .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"), 

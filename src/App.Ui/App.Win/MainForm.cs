@@ -9,7 +9,7 @@ using My.Shared.Logging.Serilog;
 using App.Services;
 using App.SharedKernel.Interfaces;
 using App.Data.Models;
-using App.Data.Sandbox.Entities;
+using App.Data.Sandbox;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using App.Infrastructure.Data;

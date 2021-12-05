@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using App.Data.Models;
 #nullable disable
 
-namespace App.Data.Sandbox.Entities
+namespace App.Data.Sandbox
 {
     public partial class SandboxContext : DbContext
     {

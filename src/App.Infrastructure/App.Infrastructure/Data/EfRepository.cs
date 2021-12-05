@@ -1,4 +1,4 @@
-﻿using App.Data.Sandbox.Entities;
+﻿using App.Data.Sandbox;
 using App.SharedKernel;
 using App.SharedKernel.Interfaces;
 

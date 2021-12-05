@@ -94,6 +94,7 @@ namespace App.Win {
                         .ConfigureServices((context, services) => {
                             services.AddTransient<IConfiguration>(context => config);
                             services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
+                            services.RegisterInfrastructureDependencies();
                             services.AddTransient<MainService, MainService>();
                         })
                         .UseSerilog()
