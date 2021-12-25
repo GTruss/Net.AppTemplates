@@ -37,6 +37,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.SharedKernel", "src\Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Infrastructure", "src\Infrastructure\App.Infrastructure\App.Infrastructure.csproj", "{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App.Web.Angular", "src\UI\App.Web.Angular\", "{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53870"
+		Debug.AspNetCompiler.PhysicalPath = "src\UI\App.Web.Angular\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53870\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53870"
+		Release.AspNetCompiler.PhysicalPath = "src\UI\App.Web.Angular\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53870\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "53870"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -351,6 +371,36 @@ Global
 		{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}.Staging|x64.Build.0 = Staging|Any CPU
 		{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}.Staging|x86.ActiveCfg = Staging|Any CPU
 		{2231A0CA-C945-452C-B1A3-A72CBD43F1FA}.Staging|x86.Build.0 = Staging|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|x64.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|x64.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|x86.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Development|x86.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|x64.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|x64.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|x86.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Production|x86.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|x64.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|x64.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|x86.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Release|x86.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|Any CPU.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x64.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x64.Build.0 = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x86.ActiveCfg = Debug|Any CPU
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -371,6 +421,7 @@ Global
 		{BB0BE951-0CE4-4C5B-9FA2-1FC821E63C97} = {449D79E9-C539-499C-9D2D-4B3DDB0D473A}
 		{63A8F662-F491-4917-848A-FB1E614E54D2} = {449D79E9-C539-499C-9D2D-4B3DDB0D473A}
 		{2231A0CA-C945-452C-B1A3-A72CBD43F1FA} = {88A5A718-78B1-4B19-AEEF-0C5B3A8C1F01}
+		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA} = {B6B5556C-CB1C-43CC-B0B3-A79E3BA0D002}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11CA3875-13F1-4D4C-AA00-6946173B39C5}

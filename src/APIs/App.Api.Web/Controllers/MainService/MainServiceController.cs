@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using App.Services;
+using k8s.KubeConfigModels;
+using Newtonsoft.Json;
 
 namespace App.Api.Web.Controllers {
     [Route("api/[controller]")]
@@ -26,14 +28,15 @@ namespace App.Api.Web.Controllers {
         }
 
         [HttpGet]
-        [MapToApiVersion("3.0")]
-        [MapToApiVersion("3.1")]
         public async Task<ActionResult> Get() {
-            return Ok();
+            var response = new {
+                Status = "OK"
+            };
+            
+            return Ok(JsonConvert.SerializeObject(response));
         }
 
         [HttpPost]
-        [MapToApiVersion("3.0")]
         [MapToApiVersion("3.1")]
         public async Task<ActionResult> Post() {
             try {
