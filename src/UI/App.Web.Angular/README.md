@@ -1,5 +1,13 @@
 # App.Web.Angular
 
+* Use `npm install` to install all dependencies 
+
+* Use `npm i @angular-devkit/build-angular@12.2.2 --force` to fix the build-angular dependency version snafu 
+
+* Use `npm run start` to start the development web server. Uses port 44474 by default. 
+
+---
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
 
 ## Development server
