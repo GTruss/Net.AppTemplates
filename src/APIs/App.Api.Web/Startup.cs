@@ -29,6 +29,8 @@ using App.Infrastructure;
 using System.Configuration;
 using Autofac;
 using App.Core;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace App.Api.Web {
     public class Startup {
@@ -159,15 +161,25 @@ namespace App.Api.Web {
             string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             // Define Dependency Injected Services
-            services.AddTransient<MainService>();
+            //services.AddTransient<MainService>();
             services.AddSQLServerDbContext(_configuration.GetConnectionString("Sandbox"));
 
-            services.AddHealthChecks()
-                .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"), 
-                             name: "Main Service")
-                .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"), 
-                             name: "Weather Forecast");
+            services.AddHealthChecksUI(setupSettings: setup => {
+                        setup.AddHealthCheckEndpoint("App.Api.Web", "http://localhost:31381/healthui");
+                        setup.SetEvaluationTimeInSeconds(120);
+                    })
+                    .AddInMemoryStorage();
 
+            services.AddHealthChecks()
+                .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"),
+                             name: "Main Service",                             
+                             tags: new string[] { "api", "controller" })
+                .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"),
+                             name: "Weather Forecast",
+                             tags: new string[] { "api", "controller"})
+                .AddSqlServer(_configuration.GetConnectionString("Sandbox"),
+                             name: "Sandbox",
+                             tags: new string[] { "db", "sql", "sqlserver" });
         }
 
         public void ConfigureContainer(ContainerBuilder builder) {
@@ -223,13 +235,17 @@ namespace App.Api.Web {
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecksUI();
+                endpoints.MapHealthChecks("/healthui", new HealthCheckOptions {
+                     Predicate = _ => true,
+                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                 });
                 endpoints.MapHealthChecks("/health", new() {
                     ResponseWriter = async (context, report) => {
                         context.Response.ContentType = "application/json";
                         var response = new {
                             Status = report.Status.ToString(),
-                            HealthChecks = report.Entries.Select(x => new
-                            {
+                            HealthChecks = report.Entries.Select(x => new {
                                 Component = x.Key,
                                 Status = x.Value.Status.ToString(),
                                 Description = x.Value.Description

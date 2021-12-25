@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 using Serilog.Context;
 
+using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -30,7 +31,12 @@ namespace App.Infrastructure {
                 _logger.LogWarning("Sending email:\n {subject}", subject);
             }
 
-            await emailClient.SendMailAsync(message);
+            try {
+                await emailClient.SendMailAsync(message);
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, ex.Message);
+            }
         }
     }
 }

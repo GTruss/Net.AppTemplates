@@ -29,6 +29,13 @@ namespace App.Api.Web.Controllers {
         [MapToApiVersion("3.0")]
         [MapToApiVersion("3.1")]
         public async Task<ActionResult> Get() {
+            return Ok();
+        }
+
+        [HttpPost]
+        [MapToApiVersion("3.0")]
+        [MapToApiVersion("3.1")]
+        public async Task<ActionResult> Post() {
             try {
                 _logger.LogInformation("Running MainService...");
                 await _mainService.Run().ConfigureAwait(false);

@@ -67,10 +67,13 @@ namespace App.Services {
                 _log.LogInformation("Processing {i} of {iCount}", i, iCount);
             }
 
-            
-            var count = _logRepo.GetCountAsync().GetAwaiter().GetResult();
-
-            _log.LogInformation("There are {cnt} log entries in the database.", count);
+            try {
+                var count = _logRepo.GetCountAsync().GetAwaiter().GetResult();
+                _log.LogInformation("There are {cnt} log entries in the database.", count);
+            }
+            catch (Exception ex) {
+                _log.LogError(ex, ex.Message);
+            }
 
             _log.LogInformation("Sending Mediatr Event...");
             var serviceEvent = new SomeServiceEvent("Test message from the Main Service.");
