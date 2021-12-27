@@ -9,12 +9,12 @@ using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Formatting;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace My.Shared.Logging.Serilog {
     public class InMemorySink : ILogEventSink {
         private readonly string _outputTemplate;
-
-        public LogEventQueue<string> Events { get; } = new LogEventQueue<string>();
+        public LogEventQueue Events { get; } = new LogEventQueue();
 
         public InMemorySink(string outputTemplate) {
             _outputTemplate = outputTemplate;
@@ -25,7 +25,17 @@ namespace My.Shared.Logging.Serilog {
             if (logEvent == null) throw new ArgumentNullException(nameof(logEvent));
             var renderSpace = new StringWriter();
             _textFormatter.Format(logEvent, renderSpace);
-            Events.Enqueue(renderSpace.ToString());
+
+            string render = renderSpace.ToString();
+            Events.Enqueue(new() {
+                Message = render,
+                LogEvent = logEvent
+            });
         }
+    }
+
+    public record EventQueueMessage() {
+        public string Message {get; init; }
+        public LogEvent LogEvent { get; init; }
     }
 }

@@ -8,11 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using App.Services;
-using k8s.KubeConfigModels;
 using Newtonsoft.Json;
+
+using App.Services;
 using My.Shared.Logging.Serilog;
-using Serilog.Events;
 
 namespace App.Api.Web.Controllers {
     [Route("api/[controller]")]
@@ -33,27 +32,26 @@ namespace App.Api.Web.Controllers {
             _logger = logger;
             _mainService = mainService;
             _memSink = memSink;
+
+            _memSink.Events.Enqueued += LogEvents_Enqueued;
         }
 
         [HttpGet]
         public async Task<ActionResult> Get() {
+            _logger.LogInformation("Get() called");
             var response = new {
                 Status = "OK"
             };
+            _logger.LogInformation("Get() complete");
 
-            _memSink.Events.Enqueued += LogEvents_Enqueued;
-
-            _logger.LogInformation("Testing log...");
-
-            return Ok($"[{JsonConvert.SerializeObject(_logEntries)}]");
+            var detail = new ResponseModel(_logEntries);
+            return Ok(JsonConvert.SerializeObject(detail));
         }
 
         [HttpPost]
         [MapToApiVersion("3.1")]
         public async Task<ActionResult> Post() {
             try {
-                _memSink.Events.Enqueued += LogEvents_Enqueued;
-
                 _logger.LogInformation("Running MainService...");
                 await _mainService.Run().ConfigureAwait(false);
                 _logger.LogInformation("MainService finished.");
@@ -74,6 +72,7 @@ namespace App.Api.Web.Controllers {
         #region Events
         private void LogEvents_Enqueued(object sender, LogEventQueueArgs e) {
             _logEntries.Add(e.Message.Replace("\r\n", ""));
+            //_logEntries.Add(JsonConvert.SerializeObject(e.LogEvent));
         }
         #endregion
     }

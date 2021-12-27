@@ -19,13 +19,13 @@ namespace App.Win {
         private readonly IServiceScope _scope;
         private readonly ILogger<MainForm> _logger;
         private readonly IConfiguration _configuration;
-        private readonly LogEventQueue<string> _logEvents;
-        private readonly LogEventQueue<string> _logEventsFlat;
+        private readonly LogEventQueue _logEvents;
+        private readonly LogEventQueue _logEventsFlat;
 
         private string _errorCode = string.Empty;
 
         public MainForm(IServiceScope scope, ILogger<MainForm> logger, IConfiguration configuration, 
-                        LogEventQueue<string> logEvents, LogEventQueue<string> logEventsFlat) {
+                        LogEventQueue logEvents, LogEventQueue logEventsFlat) {
             _scope = scope;
             _logger = logger;
             _configuration = configuration;
