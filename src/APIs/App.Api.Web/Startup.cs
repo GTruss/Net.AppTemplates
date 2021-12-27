@@ -160,12 +160,10 @@ namespace App.Api.Web {
             // 
             /////////////////////
 
-
             // Use envstr here if DI instancing is needed per environment
             string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             // Define Dependency Injected Services
-            //services.AddTransient<MainService>();
             services.AddSQLServerDbContext(_configuration.GetConnectionString("Sandbox"));
 
             services.AddHealthChecksUI(setupSettings: setup => {
@@ -187,12 +185,12 @@ namespace App.Api.Web {
         }
 
         public void ConfigureContainer(ContainerBuilder builder) {
+            if (_memSink is not null) {
+                builder.RegisterInstance<InMemorySink>(_memSink);
+            }
+
             builder.RegisterModule(new DefaultServicesModule());
-            builder.RegisterModule(
-                new DefaultInfrastructureModule(
-                    _env.EnvironmentName == "Development",
-                    _memSink)
-            );
+            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

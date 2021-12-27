@@ -56,10 +56,6 @@ namespace App.Infrastructure {
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
 
-            if (_memSink is not null) {
-                builder.RegisterInstance<InMemorySink>(_memSink);
-            }
-
             builder.Register<ServiceFactory>(context => {
                 var c = context.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
