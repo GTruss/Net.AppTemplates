@@ -37,6 +37,7 @@ namespace App.Api.Web {
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _env;
         private ILogger<Startup> _logger;
+        private InMemorySink _memSink;
 
         public Startup(IConfiguration configuration, IHostEnvironment env) {
             _configuration = configuration;
@@ -49,12 +50,15 @@ namespace App.Api.Web {
                 .Build();
 
             string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
+            _memSink = new InMemorySink("[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}");
+
             Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(configuration)
                     .Enrich.FromLogContext()
                     .Enrich.WithMachineName()
                     .Enrich.With<EventTypeEnricher>()
                     .Enrich.With<SourceContextClassEnricher>()
+                    .WriteTo.Sink(_memSink)
                     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                     .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                     .WriteTo.File(new JsonFormatter(), logFileName + ".json")
@@ -184,7 +188,11 @@ namespace App.Api.Web {
 
         public void ConfigureContainer(ContainerBuilder builder) {
             builder.RegisterModule(new DefaultServicesModule());
-            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
+            builder.RegisterModule(
+                new DefaultInfrastructureModule(
+                    _env.EnvironmentName == "Development",
+                    _memSink)
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

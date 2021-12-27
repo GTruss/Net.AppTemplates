@@ -75,7 +75,7 @@ namespace App.Services {
                 _log.LogError(ex, ex.Message);
             }
 
-            _log.LogInformation("Sending Mediatr Event...");
+            _log.LogInformation("Sending MediatR Event...");
             var serviceEvent = new SomeServiceEvent("Test message from the Main Service.");
             _mediator.Publish(serviceEvent).GetAwaiter().GetResult();
 

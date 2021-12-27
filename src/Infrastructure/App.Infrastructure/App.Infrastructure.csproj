@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\App.Services\App.Services.csproj" />
     <ProjectReference Include="..\..\Shared\App.SharedKernal\App.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Shared\Logging\Serilog\My.Shared.Logging.Serilog.csproj" />
     <ProjectReference Include="..\App.Data\App.Data.Sandbox.csproj" />
   </ItemGroup>
 

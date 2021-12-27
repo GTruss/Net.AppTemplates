@@ -1,29 +1,32 @@
 ﻿using Autofac;
 
-using App.Infrastructure.Data;
-using App.SharedKernel.Interfaces;
 
 
 using System.Collections.Generic;
 using System.Reflection;
 
 using Module = Autofac.Module;
-using App.Data.Models;
 using MediatR;
 using MediatR.Pipeline;
-using App.Services.Interfaces;
 using App.Services;
+using App.Data.Models;
+using App.Infrastructure.Data;
+using App.SharedKernel.Interfaces;
+using App.Services.Interfaces;
+using My.Shared.Logging.Serilog;
 
 namespace App.Infrastructure {
     public class DefaultInfrastructureModule : Module {
         private readonly bool _isDevelopment = false;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
+        private readonly InMemorySink _memSink;
 
-        public DefaultInfrastructureModule(bool isDevelopment, Assembly callingAssembly = null) {
+        public DefaultInfrastructureModule(bool isDevelopment, InMemorySink memsink = null, Assembly callingAssembly = null) {
             _isDevelopment = isDevelopment;
-            var coreAssembly = Assembly.GetAssembly(typeof(Log)); // TODO: Replace "Log" with any type from your Core project
-            var servicesAssembly = Assembly.GetAssembly(typeof(MainService)); // TODO: Replace "Log" with any type from your Core project
-            var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
+            _memSink = memsink;
+            var coreAssembly = Assembly.GetAssembly(typeof(Log)); // Any type from your Core project
+            var servicesAssembly = Assembly.GetAssembly(typeof(MainService)); // Any type from your Services project
+            var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup)); // Any type from your Infrastructure project
             _assemblies.Add(coreAssembly);
             _assemblies.Add(servicesAssembly);
             _assemblies.Add(infrastructureAssembly);
@@ -42,7 +45,7 @@ namespace App.Infrastructure {
             RegisterCommonDependencies(builder);
         }
 
-        private void RegisterCommonDependencies(ContainerBuilder builder) {
+        private void RegisterCommonDependencies(ContainerBuilder builder ) {
             builder.RegisterGeneric(typeof(EfRepository<>))
                 .As(typeof(IRepository<>))
                 .As(typeof(IReadRepository<>))
@@ -52,6 +55,10 @@ namespace App.Infrastructure {
                 .RegisterType<Mediator>()
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
+
+            if (_memSink is not null) {
+                builder.RegisterInstance<InMemorySink>(_memSink);
+            }
 
             builder.Register<ServiceFactory>(context => {
                 var c = context.Resolve<IComponentContext>();
@@ -73,7 +80,8 @@ namespace App.Infrastructure {
                 .AsImplementedInterfaces();
             }
 
-            builder.RegisterType<EmailSender>().As<IEmailSender>()
+            builder.RegisterType<EmailSender>()
+                .As<IEmailSender>()
                 .InstancePerLifetimeScope();
         }
 
