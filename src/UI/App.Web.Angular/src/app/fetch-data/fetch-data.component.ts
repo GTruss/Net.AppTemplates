@@ -1,36 +1,50 @@
 import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-fetch-data',
   templateUrl: './fetch-data.component.html'
 })
 export class FetchDataComponent {
-  public forecasts: WeatherForecast[] = [];
+  public logEntries: string[] = [];
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
   }
 
   ngOnInit(): void {
-    this.http.get<WeatherForecast[]>(this.baseUrl + 'weatherforecast')
-      .subscribe(result => {
-          this.forecasts = result;
-        }, error =>
-          console.error(error)
-      );
+    // this.http.get<dataResponse>(this.baseUrl + 'mainservice')
+    //   .subscribe(result => {
+    //       console.dir(result);
+    //       this.messages = result.logEntries;
+    //     }, error =>
+    //       console.error(error)
+    //   );
 
-    this.http.get(this.baseUrl + 'mainservice')
+    this.http.post<DataResponse>('http://localhost:31381/api/mainservice', null)
       .subscribe(result => {
           console.dir(result);
-        }, error =>
-          console.error(error)
+          this.logEntries = result.logEntries;
+        }, (error: ErrorType) => {
+          if (error.error.detail !== undefined) {
+            const result: DataResponse = JSON.parse(error.error.detail);
+            console.error(result);
+            this.logEntries = result.logEntries;
+          }
+        }
       );
   }
 }
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+interface DataResponse {
+  logEntries: string[]
+  logEvents: string[]
+}
+
+interface ErrorType {
+  error: ErrorDetail
+}
+
+interface ErrorDetail {
+  detail: string,
+  instance: string
 }

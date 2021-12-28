@@ -182,6 +182,15 @@ namespace App.Api.Web {
                 .AddSqlServer(_configuration.GetConnectionString("Sandbox"),
                              name: "Sandbox",
                              tags: new string[] { "db", "sql", "sqlserver" });
+
+            services.AddCors(options => {
+                options.AddPolicy(name: "MyAllowAllOrigins", 
+                    builder => {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder) {
@@ -218,6 +227,7 @@ namespace App.Api.Web {
             }
 
             if (env.IsDevelopment() || envstr == "Staging") {
+                app.UseCors("MyAllowAllOrigins");
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => {
