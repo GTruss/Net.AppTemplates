@@ -55,7 +55,10 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App.Web.Angular", "src\UI\A
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "53870"
+		SlnRelativePath = "src\UI\App.Web.Angular\"
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Web.Mvc", "src\UI\App.Web.Mvc\App.Web.Mvc.csproj", "{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -401,6 +404,36 @@ Global
 		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x64.Build.0 = Debug|Any CPU
 		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x86.ActiveCfg = Debug|Any CPU
 		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}.Staging|x86.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|x64.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Debug|x86.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|x64.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|x64.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|x86.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Development|x86.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|Any CPU.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|x64.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|x64.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|x86.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Production|x86.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|x64.ActiveCfg = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|x64.Build.0 = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|x86.ActiveCfg = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Release|x86.Build.0 = Release|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|Any CPU.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|x64.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|x64.Build.0 = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|x86.ActiveCfg = Debug|Any CPU
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}.Staging|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -422,6 +455,7 @@ Global
 		{63A8F662-F491-4917-848A-FB1E614E54D2} = {449D79E9-C539-499C-9D2D-4B3DDB0D473A}
 		{2231A0CA-C945-452C-B1A3-A72CBD43F1FA} = {88A5A718-78B1-4B19-AEEF-0C5B3A8C1F01}
 		{EB7C93E7-1480-4608-967C-10E0DCEDD8CA} = {B6B5556C-CB1C-43CC-B0B3-A79E3BA0D002}
+		{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8} = {B6B5556C-CB1C-43CC-B0B3-A79E3BA0D002}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11CA3875-13F1-4D4C-AA00-6946173B39C5}
