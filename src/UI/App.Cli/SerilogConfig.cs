@@ -17,6 +17,7 @@ namespace App.Cli {
                             .Enrich.WithMachineName()
                             .Enrich.With<EventTypeEnricher>()
                             .Enrich.With<SourceContextClassEnricher>()
+                            .Enrich.With<ApplicationNameColumnEnricher>()
                             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(new JsonFormatter(), logFileName + ".json")
