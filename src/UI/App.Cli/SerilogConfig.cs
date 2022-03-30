@@ -7,7 +7,7 @@ using Serilog.Sinks.MSSqlServer;
 
 using My.Shared.Logging.Serilog;
 
-namespace App.Cli;
+namespace App.Cli; 
 
 public static class SerilogConfig {
     public static void Configure(IConfiguration config) {
@@ -18,6 +18,7 @@ public static class SerilogConfig {
                         .Enrich.WithMachineName()
                         .Enrich.With<EventTypeEnricher>()
                         .Enrich.With<SourceContextClassEnricher>()
+                        .Enrich.With<ApplicationNameColumnEnricher>()
                         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                         .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                         .WriteTo.File(new JsonFormatter(), logFileName + ".json")
