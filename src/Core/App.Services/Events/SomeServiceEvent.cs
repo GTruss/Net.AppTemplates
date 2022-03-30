@@ -2,12 +2,12 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace App.Services.Events {
-    public class SomeServiceEvent : BaseDomainEvent {
-        public readonly string Message;
+namespace App.Services.Events;
 
-        public SomeServiceEvent(string message) { 
-            Message = message;
-        }
+public class SomeServiceEvent : BaseDomainEvent {
+    public readonly string Message;
+
+    public SomeServiceEvent(string message) { 
+        Message = message;
     }
 }

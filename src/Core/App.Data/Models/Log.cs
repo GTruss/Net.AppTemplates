@@ -11,20 +11,19 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace App.Data.Models
+namespace App.Data.Models;
+
+[Table("Log")]
+public partial class Log : BaseEntity, IAggregateRoot
 {
-    [Table("Log")]
-    public partial class Log : BaseEntity, IAggregateRoot
-    {
-        [Key]
-        public int Id { get; set; }
-        public string Message { get; set; }
-        public string Level { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? Timestamp { get; set; }
-        public string Exception { get; set; }
-        public string LogEvent { get; set; }
-        [StringLength(10)]
-        public string EventType { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+    public string Message { get; set; }
+    public string Level { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? Timestamp { get; set; }
+    public string Exception { get; set; }
+    public string LogEvent { get; set; }
+    [StringLength(10)]
+    public string EventType { get; set; }
 }

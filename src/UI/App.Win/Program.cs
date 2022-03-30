@@ -22,129 +22,129 @@ using App.Core;
 // setx DOTNET_ENVIRONMENT Staging /M
 // setx DOTNET_ENVIRONMENT Production /M
 
-namespace App.Win {
-    static class Program {
+namespace App.Win;
 
-        #pragma warning disable CS8601 // Possible null reference assignment.
-        static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
-        static readonly bool isDev = env == "Development";
-        static IHost _host;
-        static Serilog.ILogger _logger;
-        static IConfiguration _config;
+static class Program {
 
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main() {
+    #pragma warning disable CS8601 // Possible null reference assignment.
+    static readonly string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+    static readonly bool isDev = env == "Development";
+    static IHost _host;
+    static Serilog.ILogger _logger;
+    static IConfiguration _config;
 
-            var builder = new ConfigurationBuilder();
-            _config = CreateConfiguration(builder);
+    /// <summary>
+    ///  The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main() {
 
-            // Setup Serilog          
-            SerilogConfig.Configure(_config, out InMemorySink memSink, out InMemorySink flatSink);
-            _logger = Log.Logger;
-            Log.ForContext("SourceContext", "Program")
-               .Information("Windows App Startup");
+        var builder = new ConfigurationBuilder();
+        _config = CreateConfiguration(builder);
 
-            // Auto-delete old log files. Configurable for per environment.
-            CleanupExpiredLogs();
+        // Setup Serilog          
+        SerilogConfig.Configure(_config, out InMemorySink memSink, out InMemorySink flatSink);
+        _logger = Log.Logger;
+        Log.ForContext("SourceContext", "Program")
+           .Information("Windows App Startup");
 
-            if (string.IsNullOrEmpty(env) ||
-                !env.Contains("Development") && !env.Contains("Staging") && !env.Contains("Production")) {
-                _logger.Error("Missing/Unexpected environment variable: DOTNET_ENVIRONMENT = {env} (expected 'Development', 'Staging' or 'Production').", env);
-                // Microsoft's default is to "fallback" to Production if the DOTNET_ENVIRONMENT
-                // doesn't exist. This is bad. If it's a manual deployment to the Development or Staging
-                // environment and they forget to create the Environment Variable, it will run the Production
-                // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes and skip steps. Err on the side of caution.
-                // So, require that the Environment Variable to be set AND it must be one of the three.
-                return;
-            }
+        // Auto-delete old log files. Configurable for per environment.
+        CleanupExpiredLogs();
 
-            // Setup DI
-            _host = CreateHost(_config);
-
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-            using (var scope = _host.Services.CreateScope()) {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<MainForm>>();
-                var mainForm = new MainForm(scope, logger, _config, memSink.Events, flatSink.Events);
-                Application.Run(mainForm);
-            };
+        if (string.IsNullOrEmpty(env) ||
+            !env.Contains("Development") && !env.Contains("Staging") && !env.Contains("Production")) {
+            _logger.Error("Missing/Unexpected environment variable: DOTNET_ENVIRONMENT = {env} (expected 'Development', 'Staging' or 'Production').", env);
+            // Microsoft's default is to "fallback" to Production if the DOTNET_ENVIRONMENT
+            // doesn't exist. This is bad. If it's a manual deployment to the Development or Staging
+            // environment and they forget to create the Environment Variable, it will run the Production
+            // configuration BY DEFAULT! Bad Microsoft. Bad. People make mistakes and skip steps. Err on the side of caution.
+            // So, require that the Environment Variable to be set AND it must be one of the three.
+            return;
         }
 
-        static IConfiguration CreateConfiguration(IConfigurationBuilder builder) {
-            // Setup Settings
-            return builder.SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{env}.json",
-                                optional: false, reloadOnChange: true)
-                    .AddEnvironmentVariables()
-                    .Build();
-        }
+        // Setup DI
+        _host = CreateHost(_config);
 
-        public static IHost CreateHost(IConfiguration config) {
-            var host = Host.CreateDefaultBuilder()
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureServices((context, services) => {
-                    services.AddTransient<IConfiguration>(context => config);
-                    services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
-                })
-                .ConfigureContainer<ContainerBuilder>(container => {
-                    container.RegisterModule(new DefaultServicesModule());
-                    container.RegisterModule(new DefaultInfrastructureModule(env == "Development"));
-                })
-                .UseSerilog()
+        Application.SetHighDpiMode(HighDpiMode.SystemAware);
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        using (var scope = _host.Services.CreateScope()) {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<MainForm>>();
+            var mainForm = new MainForm(scope, logger, _config, memSink.Events, flatSink.Events);
+            Application.Run(mainForm);
+        };
+    }
+
+    static IConfiguration CreateConfiguration(IConfigurationBuilder builder) {
+        // Setup Settings
+        return builder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env}.json",
+                            optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
                 .Build();
+    }
 
-            return host;
-        }
+    public static IHost CreateHost(IConfiguration config) {
+        var host = Host.CreateDefaultBuilder()
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .ConfigureServices((context, services) => {
+                services.AddTransient<IConfiguration>(context => config);
+                services.AddSQLServerDbContext(config.GetConnectionString("Sandbox"));
+            })
+            .ConfigureContainer<ContainerBuilder>(container => {
+                container.RegisterModule(new DefaultServicesModule());
+                container.RegisterModule(new DefaultInfrastructureModule(env == "Development"));
+            })
+            .UseSerilog()
+            .Build();
 
-        static void CleanupExpiredLogs() {
-            try {
-                LogArchive logSettings = new();
-                _config.Bind("LogArchive", logSettings);
+        return host;
+    }
 
-                Log.ForContext("SourceContext", "Program")
-                   .ForContext("LogArchive", logSettings)
-                   .Information("CleanupExpiredLogs()");
+    static void CleanupExpiredLogs() {
+        try {
+            LogArchive logSettings = new();
+            _config.Bind("LogArchive", logSettings);
 
-                string path = AppDomain.CurrentDomain.BaseDirectory;
-                path += @"\logs";
+            Log.ForContext("SourceContext", "Program")
+               .ForContext("LogArchive", logSettings)
+               .Information("CleanupExpiredLogs()");
 
-                var files = Directory.GetFiles(path);
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path += @"\logs";
 
-                foreach (var fileName in files) {
-                    var file = new FileInfo(fileName);
-                    DateTime threshold = DateTime.Now;
+            var files = Directory.GetFiles(path);
 
-                    threshold = logSettings.Expiration.Interval.ToLower() switch {
-                        "minutes" => DateTime.Now.AddMinutes(-logSettings.Expiration.IntervalCount),
-                        "days" => DateTime.Now.AddDays(-logSettings.Expiration.IntervalCount),
-                        _ => throw new NotImplementedException()
-                    };
+            foreach (var fileName in files) {
+                var file = new FileInfo(fileName);
+                DateTime threshold = DateTime.Now;
 
-                    if (file.CreationTime < threshold) {
-                        file.Delete();
-                    }
+                threshold = logSettings.Expiration.Interval.ToLower() switch {
+                    "minutes" => DateTime.Now.AddMinutes(-logSettings.Expiration.IntervalCount),
+                    "days" => DateTime.Now.AddDays(-logSettings.Expiration.IntervalCount),
+                    _ => throw new NotImplementedException()
+                };
+
+                if (file.CreationTime < threshold) {
+                    file.Delete();
                 }
             }
-            catch (Exception ex) {
-                Log.Error(ex, ex.Message);
-                return;
-            }
+        }
+        catch (Exception ex) {
+            Log.Error(ex, ex.Message);
+            return;
         }
     }
-
-    public record LogArchive {
-        public ExpirationSettings Expiration { get; set; }
-
-        public record ExpirationSettings {
-            public string Interval { get; set; }
-            public int IntervalCount { get; set; }
-        }
-    }
-
 }
+
+public record LogArchive {
+    public ExpirationSettings Expiration { get; set; }
+
+    public record ExpirationSettings {
+        public string Interval { get; set; }
+        public int IntervalCount { get; set; }
+    }
+}
+

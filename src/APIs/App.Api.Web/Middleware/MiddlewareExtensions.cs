@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 
-namespace App.Api.Web.Middleware {
-    public static class MiddlewareExtensions {
-        public static IApplicationBuilder UseHeaderMiddleware(this IApplicationBuilder builder) {
-            return builder.UseMiddleware<HeaderMiddleware>();
-        }
+namespace App.Api.Web.Middleware;
+
+public static class MiddlewareExtensions {
+    public static IApplicationBuilder UseHeaderMiddleware(this IApplicationBuilder builder) {
+        return builder.UseMiddleware<HeaderMiddleware>();
     }
 }

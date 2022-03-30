@@ -1,17 +1,17 @@
 ﻿
-namespace App.SharedKernel.Interfaces {
-    public interface IReadRepository<T> where T : class, IAggregateRoot {
-    }
+namespace App.SharedKernel.Interfaces;
 
-
-    // generic methods approach option
-    //public interface IRepository
-    //{
-    //    Task<T> GetByIdAsync<T>(int id) where T : BaseEntity, IAggregateRoot;
-    //    Task<List<T>> ListAsync<T>() where T : BaseEntity, IAggregateRoot;
-    //    Task<List<T>> ListAsync<T>(ISpecification<T> spec) where T : BaseEntity, IAggregateRoot;
-    //    Task<T> AddAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
-    //    Task UpdateAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
-    //    Task DeleteAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
-    //}
+public interface IReadRepository<T> where T : class, IAggregateRoot {
 }
+
+
+// generic methods approach option
+//public interface IRepository
+//{
+//    Task<T> GetByIdAsync<T>(int id) where T : BaseEntity, IAggregateRoot;
+//    Task<List<T>> ListAsync<T>() where T : BaseEntity, IAggregateRoot;
+//    Task<List<T>> ListAsync<T>(ISpecification<T> spec) where T : BaseEntity, IAggregateRoot;
+//    Task<T> AddAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
+//    Task UpdateAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
+//    Task DeleteAsync<T>(T entity) where T : BaseEntity, IAggregateRoot;
+//}

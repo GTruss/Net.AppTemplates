@@ -1,15 +1,15 @@
 using System;
 
-namespace App.Api.Web {
-    public class WeatherForecast {
-        public DateTime Date { get; set; }
+namespace App.Api.Web;
 
-        public int TemperatureC { get; set; }
+public class WeatherForecast {
+    public DateTime Date { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    public int TemperatureC { get; set; }
 
-        public string Summary { get; set; }
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
-        public string Test { get; set; }
-    }
+    public string Summary { get; set; }
+
+    public string Test { get; set; }
 }

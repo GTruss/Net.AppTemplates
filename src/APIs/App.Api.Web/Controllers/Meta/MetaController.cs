@@ -8,54 +8,55 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace App.Api.Web {
-    [ApiController]
-    [ApiExplorerSettings(GroupName = "v3.1")]
-    [ApiVersion("3.1")]
-    public class MetaController : ControllerBase {
-        private readonly HealthCheckService _healthCheckService;
+namespace App.Api.Web;
 
-        public MetaController(HealthCheckService healthCheckService) {
-            _healthCheckService = healthCheckService;
-        }
+[ApiController]
+[ApiExplorerSettings(GroupName = "v3.1")]
+[ApiVersion("3.1")]
+public class MetaController : ControllerBase {
+    private readonly HealthCheckService _healthCheckService;
 
-        [SwaggerOperation(
-            Summary = "Gets information about the API",
-            Description = "Gets information about the API.",
-            OperationId = "Meta.Info",
-            Tags = new[] { "Meta" })
-        ]
-        [HttpGet("/info")]
-        public ActionResult<string> Info() {
-            var assembly = typeof(Startup).Assembly;
+    public MetaController(HealthCheckService healthCheckService) {
+        _healthCheckService = healthCheckService;
+    }
 
-            var creationDate = System.IO.File.GetCreationTime(assembly.Location);
-            var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
+    [SwaggerOperation(
+        Summary = "Gets information about the API",
+        Description = "Gets information about the API.",
+        OperationId = "Meta.Info",
+        Tags = new[] { "Meta" })
+    ]
+    [HttpGet("/info")]
+    public ActionResult<string> Info() {
+        var assembly = typeof(Startup).Assembly;
 
-            return Ok($"Version: {version}, Last Updated: {creationDate}");
-        }
+        var creationDate = System.IO.File.GetCreationTime(assembly.Location);
+        var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-        [SwaggerOperation(
-            Summary = "Returns the health of the API & Services.",
-            Description = "Returns the health of the API & Services.",
-            OperationId = "Meta.Health",
-            Tags = new[] { "Meta" })
-        ]
-        [HttpGet("/health")]
-        public async Task<IActionResult> Health() {
-            var report = await _healthCheckService.CheckHealthAsync();
+        return Ok($"Version: {version}, Last Updated: {creationDate}");
+    }
 
-            var response = new {
-                Status = report.Status.ToString(),
-                HealthChecks = report.Entries.Select(x => new {
-                    Component = x.Key,
-                    Status = x.Value.Status.ToString(),
-                    Description = x.Value.Description
-                }),
-                HealthCheckDuration = report.TotalDuration
-            };
+    [SwaggerOperation(
+        Summary = "Returns the health of the API & Services.",
+        Description = "Returns the health of the API & Services.",
+        OperationId = "Meta.Health",
+        Tags = new[] { "Meta" })
+    ]
+    [HttpGet("/health")]
+    public async Task<IActionResult> Health() {
+        var report = await _healthCheckService.CheckHealthAsync();
 
-            return report.Status == HealthStatus.Healthy ? Ok(response) : StatusCode((int)HttpStatusCode.ServiceUnavailable, report);
-        }
+        var response = new {
+            Status = report.Status.ToString(),
+            HealthChecks = report.Entries.Select(x => new {
+                Component = x.Key,
+                Status = x.Value.Status.ToString(),
+                Description = x.Value.Description
+            }),
+            HealthCheckDuration = report.TotalDuration
+        };
+
+        return report.Status == HealthStatus.Healthy ? Ok(response) : StatusCode((int)HttpStatusCode.ServiceUnavailable, report);
     }
 }
+

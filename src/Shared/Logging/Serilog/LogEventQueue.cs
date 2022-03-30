@@ -6,34 +6,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace My.Shared.Logging.Serilog {
-    public class LogEventQueue {
-        private readonly Queue<EventQueueMessage> queue = new Queue<EventQueueMessage>();
-        public event EventHandler<LogEventQueueArgs> Enqueued;
+namespace My.Shared.Logging.Serilog;
 
-        protected virtual void OnEnqueued(EventQueueMessage item) {
-            if (Enqueued != null) {
-                Enqueued(this, new LogEventQueueArgs() { 
-                    Message = item.Message, 
-                    LogEvent = item.LogEvent
-                });
-            }
-        }
+public class LogEventQueue {
+    private readonly Queue<EventQueueMessage> queue = new Queue<EventQueueMessage>();
+    public event EventHandler<LogEventQueueArgs> Enqueued;
 
-        public virtual void Enqueue(EventQueueMessage item) {
-            queue.Enqueue(item);
-            OnEnqueued(item);
-        }
-
-        public int Count {
-            get {
-                return queue.Count;
-            }
+    protected virtual void OnEnqueued(EventQueueMessage item) {
+        if (Enqueued != null) {
+            Enqueued(this, new LogEventQueueArgs() { 
+                Message = item.Message, 
+                LogEvent = item.LogEvent
+            });
         }
     }
 
-    public class LogEventQueueArgs : EventArgs {
-        public string Message { get; set; }
-        public LogEvent LogEvent { get; set; }
+    public virtual void Enqueue(EventQueueMessage item) {
+        queue.Enqueue(item);
+        OnEnqueued(item);
     }
+
+    public int Count {
+        get {
+            return queue.Count;
+        }
+    }
+}
+
+public class LogEventQueueArgs : EventArgs {
+    public string Message { get; set; }
+    public LogEvent LogEvent { get; set; }
 }
