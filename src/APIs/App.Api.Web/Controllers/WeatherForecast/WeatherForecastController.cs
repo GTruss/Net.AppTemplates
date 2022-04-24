@@ -12,7 +12,7 @@ namespace App.Api.Web.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 //[ApiExplorerSettings(GroupName = "v1.0")]
 [ApiVersion("1.0", Deprecated = true)]
-[ApiVersion("1.1")]
+[ApiVersion("1.1-beta")]
 //[Produces("application/vnd.test+json")]
 public partial class WeatherForecastController : ControllerBase {
     private static readonly string[] Summaries = new[]
@@ -42,7 +42,7 @@ public partial class WeatherForecastController : ControllerBase {
     }
 
     [HttpGet]
-    [MapToApiVersion("1.1")]
+    [MapToApiVersion("1.1-beta")]
     public IEnumerable<WeatherForecast> Get_V1_1() {
         var rng = new Random();
         _logger.LogInformation("Get Forecast called {dbl}", rng.NextDouble());

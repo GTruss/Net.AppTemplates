@@ -185,7 +185,7 @@ public class Startup {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => {
-                foreach (var description in provider.ApiVersionDescriptions) {
+                foreach (var description in provider.ApiVersionDescriptions.OrderBy(d => d.ApiVersion).Reverse()) {
                     c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
                 }
             });
