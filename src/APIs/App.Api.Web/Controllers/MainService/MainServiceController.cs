@@ -16,9 +16,9 @@ using Serilog.Events;
 
 namespace App.Api.Web.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[ApiExplorerSettings(GroupName = "v3.0")]
+//[ApiExplorerSettings(GroupName = "v3.0")]
 [ApiVersion("3.0")]
 [ApiVersion("3.1")]
 public partial class MainServiceController : ControllerBase {

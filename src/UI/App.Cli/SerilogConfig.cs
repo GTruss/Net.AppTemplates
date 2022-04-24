@@ -6,16 +6,23 @@ using Serilog.Formatting.Json;
 using Serilog.Sinks.MSSqlServer;
 
 using My.Shared.Logging.Serilog;
+using System.Reflection;
+using Serilog.Exceptions;
 
 namespace App.Cli; 
 
 public static class SerilogConfig {
     public static void Configure(IConfiguration config) {
         string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_HHmmss}.log";
+        var name = Assembly.GetExecutingAssembly().GetName();
+        
         Log.Logger = new LoggerConfiguration()
                         .ReadFrom.Configuration(config)
                         .Enrich.FromLogContext()
                         .Enrich.WithMachineName()
+                        .Enrich.WithExceptionDetails()
+                        .Enrich.WithProperty("Assembly", name.Name)
+                        .Enrich.WithProperty("Version", name.Version.ToString())
                         .Enrich.With<EventTypeEnricher>()
                         .Enrich.With<SourceContextClassEnricher>()
                         .Enrich.With<ApplicationNameColumnEnricher>()

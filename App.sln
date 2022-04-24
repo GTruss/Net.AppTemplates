@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Infrastructure", "src\I
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App.Web.Angular", "src\UI\App.Web.Angular\", "{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_53870"
 		Debug.AspNetCompiler.PhysicalPath = "src\UI\App.Web.Angular\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53870\"
@@ -58,7 +58,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App.Web.Angular", "src\UI\A
 		SlnRelativePath = "src\UI\App.Web.Angular\"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Web.Mvc", "src\UI\App.Web.Mvc\App.Web.Mvc.csproj", "{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web.Mvc", "src\UI\App.Web.Mvc\App.Web.Mvc.csproj", "{75FEAE88-7E95-4861-9951-1BD4CA0CCEF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

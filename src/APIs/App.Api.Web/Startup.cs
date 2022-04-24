@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,11 @@ using Autofac;
 using App.Core;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
+using App.Api.Web.Helpers;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Reflection;
+using Serilog.Exceptions;
 
 namespace App.Api.Web;
 
@@ -51,14 +57,19 @@ public class Startup {
             .Build();
 
         string logFileName = AppDomain.CurrentDomain.BaseDirectory + @$"\logs\LogFile_{ DateTime.Now:yyyyMMdd_hhmmss}.log";
+        var name = Assembly.GetExecutingAssembly().GetName();
         _memSink = new InMemorySink("[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}");
 
         Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
+                .Enrich.WithExceptionDetails()
+                .Enrich.WithProperty("Assembly", name.Name)
+                .Enrich.WithProperty("Version", name.Version.ToString())
                 .Enrich.With<EventTypeEnricher>()
                 .Enrich.With<SourceContextClassEnricher>()
+                .Enrich.With<ApplicationNameColumnEnricher>()
                 .WriteTo.Sink(_memSink)
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(logFileName, outputTemplate: "[{Timestamp:HH:mm:ss.fff} ({EventType}) {Level:u3}] ({SourceContext}) {Message:lj}{NewLine}{Exception}")
@@ -85,81 +96,22 @@ public class Startup {
         });
 
         services.AddControllers().AddNewtonsoftJson();
-        services.AddSwaggerGen(c => {
-            // Added Meta controller
-            c.SwaggerDoc("v3.1", new OpenApiInfo { Title = "App.Api.Web", Version = "v3.1", Description = "A sample Web API project." });
-            // Added MainService controller
-            c.SwaggerDoc("v3.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v3.0", Description = "Now supports the MainService." });
-            // Weather Forecaster v2
-            c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v2.0", Description = "Returns 10 forecasts" });
-            // Bug fixes
-            c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "App.Api.Web", Version = "v1.1", Description = "Returns higher range of 5 forecasts." });
-            // Initial release
-            c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "App.Api.Web", Version = "v1.0", Description = "Returns 5 forecasts. Deprecated." });
-            c.EnableAnnotations();
-            c.DocInclusionPredicate((docName, apiDesc) => {
-                var actionApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
-                // would mean this action is unversioned and should be included everywhere
-                if (actionApiVersionModel == null) {
-                    return true;
-                }
-                if (actionApiVersionModel.DeclaredApiVersions.Any()) {
-                    return actionApiVersionModel.DeclaredApiVersions.Any(v => $"v{v}" == docName);
-                }
-                return actionApiVersionModel.ImplementedApiVersions.Any(v => $"v{v}" == docName);
-            });
-        });
 
-        /////////////////////
-        // The following block implements Request Header Versioning.
-        //
-        // Send on the request header:
-        //      x-api-version = {version}
-        //
-        // To use version 3.0 of the API, for example:
-        //      x-api-version = 3.0
-        // 
-        // This directly corresponds to the Controller Attribute:
-        //      [ApiVersion("3.0")]
-        //      
-        // And Method Attribute:
-        //      [MapToApiVersion("3.0")]
-        //
-        // This allows each Controller and Method to be wired up independently for versioning.
+        services.AddSwaggerGen(c => {
+            c.OperationFilter<SwaggerDefaultValues>();
+        });
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        
         services.AddApiVersioning(o => {
             o.DefaultApiVersion = new ApiVersion(3, 1);
             o.AssumeDefaultVersionWhenUnspecified = true;
-            o.ApiVersionReader = new HeaderApiVersionReader("x-api-version"); // Use Request Header versioning
+            o.ReportApiVersions = true;
         });
-        // Alternatively, can use Media Type versioning instead of Header versioning: 
-        // eg, 
-        //  Decorate the Controller with the following attribute:
-        //     [Produces("application/vnd.test+json")]
-        //
-        //  All of the requests that return JSON can indicate a specific version number in the Request Header:
-        //      Accept = application/json;v=2.0
-        //
-        // Can also be used with multiple media types, including custom.
-        //
-        // To implement, replace:
-        //      o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-        //
-        // with:
-        //      o.ApiVersionReader = new MediaTypeApiVersionReader();
-        //
-        // 
-        // Another alternative is to use Query String Versioning, if preferred:
-        //
-        //      o.ApiVersionReader = new QueryStringApiVersionReader("v")
-        //
-        // eg,
-        //      mysite.com/api/customers?v=3.0
-        //
-        //
-        // Note that URL versioning is NOT recommended as it breaks the "Cool URLs don't change" guideline by Tim Berners-Lee and
-        // can be very difficult to maintain and support with many releases.
-        // 
-        /////////////////////
+
+        services.AddVersionedApiExplorer(options => {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
 
         // Use envstr here if DI instancing is needed per environment
         string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -174,10 +126,10 @@ public class Startup {
                 .AddInMemoryStorage();
 
         services.AddHealthChecks()
-            .AddUrlGroup(new Uri("http://localhost:31381/api/MainService"),
+            .AddUrlGroup(new Uri("http://localhost:31381/api/v3.1/MainService"),
                          name: "Main Service",                             
                          tags: new string[] { "api", "controller" })
-            .AddUrlGroup(new Uri("http://localhost:31381/api/WeatherForecast"),
+            .AddUrlGroup(new Uri("http://localhost:31381/api/v3.1/WeatherForecast"),
                          name: "Weather Forecast",
                          tags: new string[] { "api", "controller"})
             .AddSqlServer(_configuration.GetConnectionString("Sandbox"),
@@ -204,7 +156,8 @@ public class Startup {
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger) {
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger,
+                          IApiVersionDescriptionProvider provider) {
         _logger = logger;
 
         string envstr = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -232,11 +185,9 @@ public class Startup {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v3.1/swagger.json", "App.Api.Web v3.1");
-                c.SwaggerEndpoint("/swagger/v3.0/swagger.json", "App.Api.Web v3.0");
-                c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "App.Api.Web v2.0");
-                c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "App.Api.Web v1.1");
-                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "App.Api.Web v1.0");
+                foreach (var description in provider.ApiVersionDescriptions) {
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+                }
             });
         }
         // Custom Middleware Injection

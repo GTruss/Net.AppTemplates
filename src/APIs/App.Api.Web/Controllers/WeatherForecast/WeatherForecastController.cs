@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 namespace App.Api.Web.Controllers; 
 
 [ApiController]
-[Route("api/[controller]")]
-[ApiExplorerSettings(GroupName = "v1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+//[ApiExplorerSettings(GroupName = "v1.0")]
 [ApiVersion("1.0", Deprecated = true)]
 [ApiVersion("1.1")]
-[Produces("application/vnd.test+json")]
+//[Produces("application/vnd.test+json")]
 public partial class WeatherForecastController : ControllerBase {
     private static readonly string[] Summaries = new[]
     {
