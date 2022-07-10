@@ -4,6 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>ef9ccb1c-5633-48e0-b2f8-591a5d0bfdfb</UserSecretsId>
     <Configurations>Debug;Release;Development;Staging;Production</Configurations>
+    <Version>3.1.0.0</Version>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
   </PropertyGroup>
 
   <!--<ItemGroup>

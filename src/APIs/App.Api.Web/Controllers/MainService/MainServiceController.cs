@@ -16,11 +16,10 @@ using Serilog.Events;
 
 namespace App.Api.Web.Controllers;
 
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v{version:apiVersion}/mainservice")]
 [ApiController]
-//[ApiExplorerSettings(GroupName = "v3.0")]
 [ApiVersion("3.0")]
-//[ApiVersion("3.1")]
+[ApiVersion("3.1")]
 public partial class MainServiceController : ControllerBase {
     private readonly ILogger<MainServiceController> _logger;
     private readonly MainService _mainService;

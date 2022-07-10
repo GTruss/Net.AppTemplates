@@ -19,12 +19,12 @@ public class HeaderMiddleware {
 
     public async Task Invoke(HttpContext context) {
 
-        if (!context.Request.Path.Value.ToLower().Contains("swagger")) {
-            context.Request.Headers.TryGetValue("x-api-version", out var versionNumber);
+        //if (!context.Request.Path.Value.ToLower().Contains("swagger")) {
+            //context.Request.Headers.TryGetValue("x-api-version", out var versionNumber);
 
-            string ver = !string.IsNullOrEmpty(versionNumber) ? versionNumber : "Not sent; using DefaultApiVersion from Startup.";
-            _logger.LogInformation("Incoming Request called with API Version: {version}", ver);
-        }
+            //string ver = !string.IsNullOrEmpty(versionNumber) ? versionNumber : "Not sent; using DefaultApiVersion from Startup.";
+            //_logger.LogInformation("Incoming Request called with API Version: {version}", ver);
+        //}
 
         await _next.Invoke(context);
     }

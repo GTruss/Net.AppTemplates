@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace App.Api.Web;
 
 [ApiController]
-[ApiExplorerSettings(GroupName = "v3.1")]
 [ApiVersion("3.1")]
 public class MetaController : ControllerBase {
     private readonly HealthCheckService _healthCheckService;
@@ -31,9 +30,10 @@ public class MetaController : ControllerBase {
         var assembly = typeof(Startup).Assembly;
 
         var creationDate = System.IO.File.GetCreationTime(assembly.Location);
+        var updateDate = System.IO.File.GetLastWriteTime(assembly.Location);
         var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-        return Ok($"Version: {version}, Last Updated: {creationDate}");
+        return Ok($"Version: {version}, Created: {creationDate}, Last Updated: {updateDate}");
     }
 
     [SwaggerOperation(

@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Infrastructure", "src\I
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "App.Web.Angular", "src\UI\App.Web.Angular\", "{EB7C93E7-1480-4608-967C-10E0DCEDD8CA}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_53870"
 		Debug.AspNetCompiler.PhysicalPath = "src\UI\App.Web.Angular\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53870\"

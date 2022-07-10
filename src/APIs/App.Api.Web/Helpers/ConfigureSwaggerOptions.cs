@@ -33,7 +33,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions> {
         };
 
         if (description.IsDeprecated)
-            info.Description += " <strong>This API version has been deprecated.</strong>";
+            info.Description += "<div><strong>This API version has been deprecated.</strong></div>";
 
         return info;
     }

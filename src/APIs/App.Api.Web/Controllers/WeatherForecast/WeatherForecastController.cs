@@ -9,10 +9,9 @@ using Microsoft.Extensions.Logging;
 namespace App.Api.Web.Controllers; 
 
 [ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
-//[ApiExplorerSettings(GroupName = "v1.0")]
+[Route("api/v{version:apiVersion}/weatherforecast")]
 [ApiVersion("1.0", Deprecated = true)]
-[ApiVersion("1.1-beta")]
+[ApiVersion("1.1-beta", Deprecated = true)]
 //[Produces("application/vnd.test+json")]
 public partial class WeatherForecastController : ControllerBase {
     private static readonly string[] Summaries = new[]
@@ -27,8 +26,6 @@ public partial class WeatherForecastController : ControllerBase {
     }
 
     [HttpGet]
-    // Examples of Versioning specific HTTP Requests
-    //[HttpGet(Name = "GetTalksForSpeaker"), MapToApiVersion("2.0")]
     [MapToApiVersion("1.0")]
     public IEnumerable<WeatherForecast> Get() {
         var rng = new Random();
@@ -42,6 +39,7 @@ public partial class WeatherForecastController : ControllerBase {
     }
 
     [HttpGet]
+    // Example of Versioning specific HTTP Requests
     [MapToApiVersion("1.1-beta")]
     public IEnumerable<WeatherForecast> Get_V1_1() {
         var rng = new Random();
