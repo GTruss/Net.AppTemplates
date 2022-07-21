@@ -1,6 +1,5 @@
 ﻿using Serilog.Core;
 using Serilog.Events;
-
 using System.Collections.Generic;
 
 namespace My.Shared.Logging.Serilog {
